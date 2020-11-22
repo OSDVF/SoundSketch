@@ -20,8 +20,17 @@ ApplicationWindow
     {
         return (fileName.slice(fileName.lastIndexOf(".") + 1))
     }
+    readonly property var supportedExtensions: ["mp3", "wav", "aac", "m4a"]
+    function importAudio(fileName,pixelPosition)
+    {
+        if (supportedExtensions.indexOf(extension(fileName).toLowerCase(
+                                            )) != -1) {
+            player.addClip(fileName,pixelPosition);
+        } else {
+            formatDialog.visible = true
+        }
+    }
 
-    readonly property var supportedExtensions: ["mp3", "wav", "aac"]
     menuBar: MenuBar {
         Menu {
             title: qsTr("&Project")
@@ -34,6 +43,11 @@ ApplicationWindow
         }
         Menu {
             title: qsTr("&Edit")
+            Action
+            {
+                text: qsTr("&Import Audio")
+                onTriggered: importDialog.open()
+            }
             Action { text: qsTr("&Cut") }
             Action { text: qsTr("&Copy") }
             Action { text: qsTr("&Paste") }
@@ -60,16 +74,7 @@ ApplicationWindow
             height: parent.height * 0.5
             maxTime: openedProjectModel.totalDurationMs
 
-            onDropped:
-            {
-                var fileName = drop.text
-                if (supportedExtensions.indexOf(extension(fileName).toLowerCase(
-                                                    )) != -1) {
-                    player.addClip(fileName,drop.x);
-                } else {
-                    formatDialog.visible = true
-                }
-            }
+            onDropped: importAudio(drop.text,drop.x)
         }
 
         Text
@@ -82,32 +87,23 @@ ApplicationWindow
             verticalAlignment: Text.AlignBottom
         }
 
-        Dialog
+        MessageDialog
         {
             id: formatDialog
             visible: false
             title: qsTr("Nepodporovaný formát souboru.")
-            modality: Qt.ApplicationModal
-
-            contentItem: Rectangle
+            text:
             {
-                implicitWidth: 400
-                implicitHeight: 100
-                Text
+                var mess = qsTr("Podporované formáty jsou: ")
+                for (var i = 0; i < supportedExtensions.length - 1; i++)
                 {
-                    text:
-                    {
-                        var mess = qsTr("Podporované formáty jsou: ")
-                        for (var i = 0; i < supportedExtensions.length - 1; i++)
-                        {
-                            mess += supportedExtensions[i] + ", "
-                        }
-                        mess += supportedExtensions[supportedExtensions.length - 1] + "."
-                    }
-
-                    anchors.centerIn: parent
+                    mess += supportedExtensions[i] + ", "
                 }
+                mess += supportedExtensions[supportedExtensions.length - 1] + "."
             }
+            standardButtons: StandardButton.Close
+            icon: StandardIcon.Warning
+            modality: Qt.ApplicationModal
         }
     }
     ButtonLine
@@ -126,6 +122,17 @@ ApplicationWindow
         x: 131
         y: 388
         width: 240
+    }
+    FileDialog {
+        id: importDialog
+        title: qsTr("Please choose an audio file")
+        nameFilters: [ "Supported containers (*.mp3 *.wav *.aac *.m4a)", "All files (*)" ]
+        folder: shortcuts.music
+        selectExisting: true
+        modality: Qt.ApplicationModal
+        onAccepted: {
+            importAudio(importDialog.fileUrl.toString(),0)
+        }
     }
     ObjectModel
     {
