@@ -3,5 +3,7 @@
         <file>main.qml</file>
         <file>Player.qml</file>
         <file>Timeline.qml</file>
+        <file>ButtonLine.qml</file>
+        <file>qml.qrc</file>
     </qresource>
 </RCC>
