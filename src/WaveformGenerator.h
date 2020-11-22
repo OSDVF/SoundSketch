@@ -23,7 +23,7 @@ public:
             const char* p = str.c_str();
             Demuxer *demuxer = new Demuxer(p);
             generateFromStream(demuxer,byteArray);
-
+            delete demuxer;
         }
         catch (const FFmpegException& e)
         {
@@ -42,6 +42,7 @@ public:
             ContainerInfo info = demuxer->GetInfo();
             duration = info.durationInMicroSeconds / 1000;
             generateFromStream(demuxer,byteArray);
+            delete demuxer;
         }
         catch (const FFmpegException& e)
         {
@@ -56,17 +57,19 @@ private:
         WaveformGenerator sink(byteArray);
         const char *fname = demuxer->GetFileName();
 
-        int stream = av_find_best_stream(demuxer->containerContext, AVMEDIA_TYPE_AUDIO, -1, -1, NULL, 0);
-        if (stream < 0)
+        int streamIndex = av_find_best_stream(demuxer->containerContext, AVMEDIA_TYPE_AUDIO, -1, -1, NULL, 0);//Returns stream index
+        if (streamIndex < 0)
         {
-            throw FFmpegException("Could not find " + std::string(av_get_media_type_string(AVMEDIA_TYPE_AUDIO)) + " stream in input file " + std::string(fname), stream);
+            throw FFmpegException("Could not find " + std::string(av_get_media_type_string(AVMEDIA_TYPE_AUDIO)) + " stream in input file " + std::string(fname), streamIndex);
         }
+        int streamId = demuxer->containerContext->streams[streamIndex]->id;//But we need the stream id too
+
         //Extract information
-        sink.setFrameCount(demuxer->GetFrameCount(stream));
+        sink.setFrameCount(demuxer->GetFrameCount(streamId));
         delete demuxer;//We need to clean up
 
         demuxer = new Demuxer(fname);
-        demuxer->DecodeAudioStream(stream,&sink);
+        demuxer->DecodeAudioStream(streamIndex,&sink);
         // tie the file sink to the best audio stream in the input container.
 
         // Prepare the output pipeline. This will push a small amount of frames to the file sink until it IsPrimed returns true.
@@ -79,7 +82,6 @@ private:
 
         // done
         byteArray.resize(sink.bufferIndex);
-        delete demuxer;
     }
 
 protected:
@@ -159,8 +161,10 @@ protected:
             auto arrSize = byteArray.size();
             if(bufferIndex >= arrSize)
             {
+                auto remaining = (frameCount - processedFrames);
+                auto remainingFramesOrHalfOfProcessed = remaining <= 0 ? processedFrames/2 : remaining;
                 qDebug() << frameCount <<"/"<< processedFrames;
-                byteArray.resize(arrSize + (frameCount - processedFrames)*frame->nb_samples);
+                byteArray.resize(arrSize + remainingFramesOrHalfOfProcessed*frame->nb_samples);
             }
             byteArray.data()[bufferIndex++] = sample;
         }
@@ -190,7 +194,7 @@ protected:
 private:
     FrameSinkStream* stream = nullptr;
     QByteArray& byteArray;
-    int frameCount;
+    int frameCount = 1;
     int processedFrames = 0;
     bool bufferSetup = false;
     int bufferIndex = 0;
