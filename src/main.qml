@@ -1,5 +1,7 @@
 import QtQuick 2.14
 import QtQuick.Window 2.14
+import QtQml.Models 2.15
+import QtQuick.Dialogs 1.3
 import QtQuick.Layouts 1.3
 import QtQuick.Controls 2.3
 
@@ -9,6 +11,25 @@ ApplicationWindow
     height: 480
     visible: true
     title: qsTr("Hello World")
+
+    function basename(fileName)
+    {
+        return (fileName.slice(fileName.lastIndexOf("/") + 1))
+    }
+    function extension(fileName)
+    {
+        return (fileName.slice(fileName.lastIndexOf(".") + 1))
+    }
+    readonly property var supportedExtensions: ["mp3", "wav", "aac", "m4a"]
+    function importAudio(fileName,pixelPosition)
+    {
+        if (supportedExtensions.indexOf(extension(fileName).toLowerCase(
+                                            )) != -1) {
+            player.addClip(fileName,pixelPosition);
+        } else {
+            formatDialog.visible = true
+        }
+    }
 
     menuBar: MenuBar {
         Menu {
@@ -22,6 +43,11 @@ ApplicationWindow
         }
         Menu {
             title: qsTr("&Edit")
+            Action
+            {
+                text: qsTr("&Import Audio")
+                onTriggered: importDialog.open()
+            }
             Action { text: qsTr("&Cut") }
             Action { text: qsTr("&Copy") }
             Action { text: qsTr("&Paste") }
@@ -45,8 +71,12 @@ ApplicationWindow
             id: player
             anchors.horizontalCenter: parent.horizontalCenter
             width: parent.width
-            height: parent.height*0.5
+            height: parent.height * 0.5
+            maxTime: openedProjectModel.totalDurationMs
+
+            onDropped: importAudio(drop.text,drop.x)
         }
+
         Text
         {
             id: txt
@@ -57,16 +87,34 @@ ApplicationWindow
             verticalAlignment: Text.AlignBottom
         }
 
-        ButtonLine
+        MessageDialog
         {
-            id: buttonline
-            y: 400
-            width: parent.width*0.2
-            anchors.horizontalCenter: parent.horizontalLeft
-            height: parent.height*0.3
-            color: "#ffffff"
-            anchors.left: parent.left
+            id: formatDialog
+            visible: false
+            title: qsTr("Nepodporovaný formát souboru.")
+            text:
+            {
+                var mess = qsTr("Podporované formáty jsou: ")
+                for (var i = 0; i < supportedExtensions.length - 1; i++)
+                {
+                    mess += supportedExtensions[i] + ", "
+                }
+                mess += supportedExtensions[supportedExtensions.length - 1] + "."
+            }
+            standardButtons: StandardButton.Close
+            icon: StandardIcon.Warning
+            modality: Qt.ApplicationModal
         }
+    }
+    ButtonLine
+    {
+        id: buttonline
+        y: 400
+        width: parent.width*0.2
+        anchors.horizontalCenter: parent.horizontalLeft
+        height: parent.height*0.3
+        color: "#ffffff"
+        anchors.left: parent.left
     }
     TabBar
     {
@@ -74,5 +122,34 @@ ApplicationWindow
         x: 131
         y: 388
         width: 240
+    }
+    FileDialog {
+        id: importDialog
+        title: qsTr("Please choose an audio file")
+        nameFilters: [ "Supported containers (*.mp3 *.wav *.aac *.m4a)", "All files (*)" ]
+        folder: shortcuts.music
+        selectExisting: true
+        modality: Qt.ApplicationModal
+        onAccepted: {
+            importAudio(importDialog.fileUrl.toString(),0)
+        }
+    }
+    ObjectModel
+    {
+        id: openedProjectModel
+        property string filePath: ""
+        property ListModel clips: player.clipList
+
+        //Computed properties
+        readonly property real totalDurationMs:
+        {
+            if (clips.count == 0)
+                return 50000 //Default for empty projects
+
+            var lastClip = clips.get(clips.count - 1)
+
+            return lastClip.posMs + lastClip.durationMs
+        }
+        
     }
 }
