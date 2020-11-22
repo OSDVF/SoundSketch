@@ -1,5 +1,7 @@
 import QtQuick 2.0
 import QtQuick.Controls 2.0
+import itu.project.backend 1.0
+import "ClipPositioning.js" as ClipPositioning
 
 Rectangle
 {
@@ -8,6 +10,32 @@ Rectangle
     height: parent.height
 
     readonly property int pos_ms: timeline.pos_ms
+    property real maxTime: 50000
+
+    //Aliases for project object model manipulation
+    property alias clipList: clipList
+    signal dropped(QtObject drop)
+
+    function addClip(fileUrl, pixelOffset) {
+        //Set new clip properties
+        var file = audioFile.createObject(parent,{fileUrl:fileUrl})
+        clipList.append({
+                            "file": file,
+                            "posMs": pixelOffset / timeline.scale_ms + timeline.offset_ms,
+                            "durationMs": file.durationUs / 1000
+                        })
+    }
+    Component{
+        id:audioFile
+        AudioFile{
+
+        }
+    }
+
+    //Models
+    ListModel {
+        id: clipList
+    }
 
     Rectangle
     {
@@ -19,25 +47,59 @@ Rectangle
         height: time_offset_slider.y - y
 
         //border.width: 1 //debug
-        color: "#CCCCCC"
+        color: Style.timelineColor
 
-        MouseArea
+        DropArea //For inserting audio files
         {
-            anchors.fill: parent;
-            onWheel:
+            anchors.fill: parent
+            id: dropArea
+            onDropped: control.dropped(drop)
+
+            MouseArea
             {
-                var sc = timeline.scale_s + (wheel.angleDelta.y / 12)
-                if (sc > timeline.scale_s_min && sc <= timeline.scale_s_max)
+                anchors.fill: parent
+                onWheel:
                 {
-                    timeline.scale_s = sc;
-                    timeline.redraw();
+                    var sc = timeline.scale_s + (wheel.angleDelta.y / 12)
+                    if (sc > timeline.scale_s_min
+                            && sc <= timeline.scale_s_max)
+                            {
+                        timeline.scale_s = sc
+                        timeline.redraw()
+                    }
                 }
-            }
-            onPositionChanged:
-            {
-                if(pressed)
+                onPositionChanged:
                 {
-                    timeline.value = mouseX / width;
+                    if(pressed)
+                    {
+                        timeline.value = mouseX / width;
+                    }
+                }
+
+                Flickable
+                {
+                    anchors.fill: parent
+                    contentWidth: timeline.content_width
+                    interactive: false
+                    contentX: timeline.offset_pixels
+                    clip: true
+
+                    Repeater //Reads the list of clips and displays them in the timeline
+                    {
+                        model: clipList
+                        AudioClip {
+                            x: model.posMs * timeline.scale_ms
+                            anchors.top: parent.top
+                            anchors.bottom: parent.bottom
+                            width: durationMs * timeline.scale_ms
+                            backColor: Style.backColors[index % Style.backColors.length]
+                            waveColor: Style.waveColors[index % Style.waveColors.length]
+                        }
+                        onItemAdded: {
+                            item.loadAudioFile(model.get(index).file)
+                            ClipPositioning.recalculatePositions();
+                        }
+                    }
                 }
             }
         }
@@ -63,7 +125,7 @@ Rectangle
         width: parent.width
         y: parent.height - height
         from: 0
-        to: 50000 - timeline.width_ms
+        to: maxTime - timeline.width_ms
         value: from
         onValueChanged:
         {

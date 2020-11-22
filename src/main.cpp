@@ -1,5 +1,7 @@
 #include <QGuiApplication>
 #include <QQmlApplicationEngine>
+#include "waveformplot.h"
+#include "audiofile.h"
 
 int main(int argc, char *argv[])
 {
@@ -14,6 +16,9 @@ int main(int argc, char *argv[])
         if (!obj && url == objUrl)
             QCoreApplication::exit(-1);
     }, Qt::QueuedConnection);
+    qmlRegisterType<WaveformPlot>("itu.project.frontend", 1, 0, "WaveformPlot");
+    qmlRegisterType<AudioFile>("itu.project.backend", 1, 0, "AudioFile");
+    qmlRegisterSingletonType(QUrl("qrc:///Style.qml"), "itu.project.frontend", 1, 0, "Style");
     engine.load(url);
 
     return app.exec();

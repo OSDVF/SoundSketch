@@ -3,5 +3,8 @@
         <file>main.qml</file>
         <file>Player.qml</file>
         <file>Timeline.qml</file>
+        <file>Style.qml</file>
+        <file>AudioClip.qml</file>
+        <file>ClipPositioning.js</file>
     </qresource>
 </RCC>
