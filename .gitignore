@@ -8,7 +8,7 @@
 *.so
 *.so.*
 *.dll
-!lib/*.dll
+*.lib
 *.dylib
 
 # Qt-es
