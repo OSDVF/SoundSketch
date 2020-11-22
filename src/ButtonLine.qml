@@ -20,9 +20,9 @@ Rectangle{
 
     Button
     {
-          id: playback
+          id: jumpstart
           x: button.width + 50
-          text: "play back"
+          text: "jump start"
           width: control.width * 0.6
           height: control.height * 0.4
           y: 0
@@ -31,7 +31,7 @@ Rectangle{
     Button
     {
           id: play
-          x: button.width + playback.width + 50
+          x: button.width + jumpstart.width + 50
           y: 0
           text: "play"
           width: control.width * 0.6
@@ -40,10 +40,10 @@ Rectangle{
 
     Button
     {
-          id: playforward
-          x: button.width + playback.width + play.width + 50
+          id: jumpend
+          x: button.width + jumpstart.width + play.width + 50
           y: 0
-          text: "play forward"
+          text: "jump end"
           width: control.width * 0.6
           height: control.height * 0.4
     }
@@ -51,7 +51,7 @@ Rectangle{
     Button
     {
           id: cut
-          x: button.width + playback.width + play.width + playforward.width + 100
+          x: button.width + jumpstart.width + play.width + jumpend.width + 100
           y: 0
           text: "cut"
           width: control.width * 0.6
@@ -61,7 +61,7 @@ Rectangle{
     Button
     {
           id: del
-          x: button.width + playback.width + play.width + playforward.width + cut.width + 100
+          x: button.width + jumpstart.width + play.width + jumpend.width + cut.width + 100
           y: 0
           text: "del"
           width: control.width * 0.6
@@ -71,7 +71,7 @@ Rectangle{
     Button
     {
           id: notes
-          x: button.width + playback.width + play.width + playforward.width + cut.width + del.width + 100
+          x: button.width + jumpstart.width + play.width + jumpend.width + cut.width + del.width + 100
           y: 0
           text: "notes"
           width: control.width * 0.6
