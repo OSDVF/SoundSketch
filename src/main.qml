@@ -4,6 +4,7 @@ import QtQml.Models 2.15
 import QtQuick.Dialogs 1.3
 import QtQuick.Layouts 1.3
 import QtQuick.Controls 2.3
+import itu.project.backend 1.0
 
 ApplicationWindow
 {
@@ -72,7 +73,6 @@ ApplicationWindow
             anchors.horizontalCenter: parent.horizontalCenter
             width: parent.width
             height: parent.height * 0.5
-            maxTime: openedProjectModel.totalDurationMs
 
             onDropped: importAudio(drop.text,drop.x)
         }
@@ -115,6 +115,7 @@ ApplicationWindow
         height: parent.height*0.3
         color: "#ffffff"
         anchors.left: parent.left
+        onDel: player.deleteSelectedClip()
     }
     TabBar
     {
@@ -138,18 +139,6 @@ ApplicationWindow
     {
         id: openedProjectModel
         property string filePath: ""
-        property ListModel clips: player.clipList
-
-        //Computed properties
-        readonly property real totalDurationMs:
-        {
-            if (clips.count == 0)
-                return 50000 //Default for empty projects
-
-            var lastClip = clips.get(clips.count - 1)
-
-            return lastClip.posMs + lastClip.durationMs
-        }
-        
+        property ClipListModel clips: player.clipList
     }
 }

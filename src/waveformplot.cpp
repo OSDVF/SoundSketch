@@ -113,7 +113,7 @@ void WaveformPlot::createWaveformMesh(QSGGeometry *peaksGeometry,QSGGeometry *rm
             if(singleSample>maxSample) maxSample = singleSample;
             meanSample += singleSample*singleSample;
         }
-        auto normalizationConst = (zeroY/CHAR_MAX*2);
+        auto normalizationConst = (zeroY/(CHAR_MAX*2));
         float normalized = maxSample * normalizationConst;
         auto firstVerticeIndex = (i*2)% maxVerticeIndex;
         auto secondVerticeIndex = ((i*2)+1 )% maxVerticeIndex;

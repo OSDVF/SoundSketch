@@ -15,7 +15,8 @@ class AudioFile : public QObject
     Q_PROPERTY(QString fileUrl READ fileUrl WRITE setFileUrl NOTIFY fileUrlChanged REQUIRED)
     Q_PROPERTY(long durationUs READ durationUs NOTIFY fileUrlChanged STORED false)
     Q_PROPERTY(qreal bitrate READ bitrate NOTIFY fileUrlChanged STORED false)
-    Q_PROPERTY(QStringRef baseName READ baseName NOTIFY fileUrlChanged STORED false)
+    Q_PROPERTY(QString baseName READ baseName NOTIFY fileUrlChanged STORED false)
+    Q_PROPERTY(QString format READ format NOTIFY fileUrlChanged STORED false)
 
     QML_ELEMENT
 public:
@@ -24,13 +25,15 @@ public:
     long durationUs();
     qreal bitrate();
     QString fileUrl();
-    QStringRef baseName();
+    QString format();
+    QString baseName();
     void setFileUrl(QString url);
 signals:
     void fileUrlChanged();
 private:
     QString m_fileUrl;
-    QStringRef m_baseName;
+    QString m_format;
+    QString m_baseName;
     long m_duration;
     qreal m_bitrate;
 };

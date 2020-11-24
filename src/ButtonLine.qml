@@ -3,7 +3,10 @@ import QtQuick.Controls 2.0
 
 
 Rectangle{
+    signal play()
+    signal del()
     id: control
+
 
     Button {
         id: button
@@ -31,6 +34,7 @@ Rectangle{
     Button
     {
           id: play
+          onClicked: play()
           x: button.width + jumpstart.width + 50
           y: 0
           text: "play"
@@ -61,6 +65,7 @@ Rectangle{
     Button
     {
           id: del
+          onClicked: control.del()
           x: button.width + jumpstart.width + play.width + jumpend.width + cut.width + 100
           y: 0
           text: "del"

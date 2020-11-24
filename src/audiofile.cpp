@@ -1,4 +1,4 @@
-#include "audiofile.h"
+﻿#include "audiofile.h"
 #include <QUrl>
 #include <QStringRef>
 
@@ -18,9 +18,13 @@ qreal AudioFile::bitrate()
 {
     return m_bitrate;
 }
-QStringRef AudioFile::baseName()
+QString AudioFile::baseName()
 {
     return m_baseName;
+}
+QString AudioFile::format()
+{
+    return m_format;
 }
 void AudioFile::setFileUrl(QString url){
     if(m_fileUrl == url)
@@ -35,7 +39,8 @@ void AudioFile::setFileUrl(QString url){
     m_duration = info.durationInMicroSeconds;
     m_bitrate = info.bitRate;
     auto baseNamePos = local.lastIndexOf('/')+1;
-    m_baseName = QStringRef(&local,baseNamePos,local.length()-baseNamePos);
+    m_baseName = local.mid(baseNamePos);
+    m_format = QString(info.format->name);
     delete demuxer;
     emit fileUrlChanged();
 }

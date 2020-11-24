@@ -1,7 +1,6 @@
 import QtQuick 2.0
 import QtQuick.Controls 2.0
 import itu.project.backend 1.0
-import "ClipPositioning.js" as ClipPositioning
 
 Rectangle
 {
@@ -10,7 +9,8 @@ Rectangle
     height: parent.height
 
     readonly property int pos_ms: timeline.pos_ms
-    property real maxTime: 50000
+    property int selectedClipIndex: 0
+    property alias totalDurationMs: clipList.totalDurationMs
 
     //Aliases for project object model manipulation
     property alias clipList: clipList
@@ -18,22 +18,15 @@ Rectangle
 
     function addClip(fileUrl, pixelOffset) {
         //Set new clip properties
-        var file = audioFile.createObject(parent,{fileUrl:fileUrl})
-        clipList.append({
-                            "file": file,
-                            "posMs": pixelOffset / timeline.scale_ms + timeline.offset_ms,
-                            "durationMs": file.durationUs / 1000
-                        })
+        clipList.append(pixelOffset / timeline.scale_ms + timeline.offset_ms, fileUrl)
     }
-    Component{
-        id:audioFile
-        AudioFile{
-
-        }
+    function deleteSelectedClip()
+    {
+        clipList.remove(selectedClipIndex);
     }
 
     //Models
-    ListModel {
+    ClipListModel {
         id: clipList
     }
 
@@ -87,16 +80,28 @@ Rectangle
                     {
                         model: clipList
                         AudioClip {
-                            x: model.posMs * timeline.scale_ms
+                            x: model.clipItemModel.posMs * timeline.scale_ms
                             anchors.top: parent.top
                             anchors.bottom: parent.bottom
                             width: durationMs * timeline.scale_ms
-                            backColor: Style.backColors[index % Style.backColors.length]
+                            backColor: {
+                                var c = Style.backColors[index % Style.backColors.length];
+                                if(selectedClipIndex === index)
+                                {
+                                    return Qt.lighter(c,1.1);
+                                }
+                                return c;
+                            }
+
                             waveColor: Style.waveColors[index % Style.waveColors.length]
+                            formatInfoTextColor: Style.formatInfoTextColor
+                            onClicked:
+                            {
+                                selectedClipIndex = index;
+                            }
                         }
                         onItemAdded: {
-                            item.loadAudioFile(model.get(index).file)
-                            ClipPositioning.recalculatePositions();
+                            item.loadAudioFile(model.get(index).audioFile)
                         }
                     }
                 }
@@ -124,7 +129,7 @@ Rectangle
         width: parent.width
         y: parent.height - height
         from: 0
-        to: maxTime - timeline.width_ms
+        to: Math.max(50000,totalDurationMs - timeline.width_ms)
         value: from
         onValueChanged:
         {

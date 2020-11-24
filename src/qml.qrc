@@ -5,7 +5,6 @@
         <file>Timeline.qml</file>
         <file>Style.qml</file>
         <file>AudioClip.qml</file>
-        <file>ClipPositioning.js</file>
         <file>ButtonLine.qml</file>
     </qresource>
 </RCC>
