@@ -52,7 +52,7 @@ public:
         }
     }
 private:
-    static void generateFromStream(Demuxer * demuxer,QByteArray& byteArray)
+    static void generateFromStream(Demuxer *& demuxer,QByteArray& byteArray)
     {
         WaveformGenerator sink(byteArray);
         const char *fname = demuxer->GetFileName();
@@ -99,8 +99,10 @@ protected:
         return stream;
     }
 
-    virtual void WriteFrame(int /* unused */, AVFrame* frame, StreamData* /* unused */)
+    virtual void WriteFrame(int streamIndex, AVFrame* frame, StreamData* streamData)
     {
+        Q_UNUSED(streamIndex)
+        Q_UNUSED(streamData)
         AVSampleFormat format = (AVSampleFormat)frame->format;
         int data_size = av_get_bytes_per_sample(format);
         if(!bufferSetup)
