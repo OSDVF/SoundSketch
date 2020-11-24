@@ -5,6 +5,14 @@ import itu.project.frontend 1.0
 Rectangle {
     id: mainRect
     property color backColor: "#E9E9E9"
+    //width of the clip when there is no error
+    property real peaceTimeWidth: implicitWidth
+    width: {
+        if(plot.hasException)
+            return errorText.paintedWidth + 20;
+        else return peaceTimeWidth;
+    }
+
     property color waveColor: "#AAAAAA"
     property color formatInfoTextColor: "white"
     readonly property real durationMs: plot.durationMs
@@ -25,18 +33,6 @@ Rectangle {
         anchors.fill: parent
         rmsColor: Qt.darker(waveColor)
         peakColor: waveColor
-        Text {
-            color: "steelblue"
-            anchors.verticalCenter: parent.verticalCenter
-            anchors.left: parent.left
-            horizontalAlignment: Text.AlignHCenter
-            verticalAlignment: Text.AlignVCenter
-            wrapMode: Text.WordWrap
-            enabled: false
-            anchors.horizontalCenter: parent.horizontalCenter
-            text: parent.exception
-            visible: parent.hasException
-        }
         Rectangle {
             color: "#5c000000"
             radius: 5
@@ -69,10 +65,17 @@ Rectangle {
             onClicked: mainRect.clicked(mouse)
         }
     }
+    Text {
+        id: errorText
+        color: "steelblue"
+        horizontalAlignment: Text.AlignHCenter
+        verticalAlignment: Text.AlignVCenter
+        wrapMode: Text.WordWrap
+        text: plot.exception
+        anchors.fill: parent
+        anchors.margins: 10
+        visible: plot.hasException
+    }
 }
-/*##^##
-Designer {
-    D{i:0;autoSize:true;height:480;width:640}
-}
-##^##*/
+
 

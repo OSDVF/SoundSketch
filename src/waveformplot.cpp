@@ -217,7 +217,7 @@ void WaveformPlot::openFile(QString url)
             emit exceptionChanged();
         }
     }
-    catch(std::exception& e)
+    catch(const std::exception& e)
     {
         m_exception = true;
         m_exceptionMessage = QString(e.what());
@@ -243,7 +243,7 @@ void WaveformPlot::loadOpenedFile(AudioFile* file)
             emit exceptionChanged();
         }
     }
-    catch(std::exception& e)
+    catch(const std::exception& e)
     {
         m_exception = true;
         m_exceptionMessage = QString(e.what());

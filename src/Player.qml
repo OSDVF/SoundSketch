@@ -83,7 +83,7 @@ Rectangle
                             x: model.clipItemModel.posMs * timeline.scale_ms
                             anchors.top: parent.top
                             anchors.bottom: parent.bottom
-                            width: durationMs * timeline.scale_ms
+                            peaceTimeWidth: durationMs * timeline.scale_ms
                             backColor: {
                                 var c = Style.backColors[index % Style.backColors.length];
                                 if(selectedClipIndex === index)
@@ -129,7 +129,7 @@ Rectangle
         width: parent.width
         y: parent.height - height
         from: 0
-        to: Math.max(50000,totalDurationMs - timeline.width_ms)
+        to: Math.max(50000 - timeline.width_ms,totalDurationMs - timeline.width_ms)
         value: from
         onValueChanged:
         {
