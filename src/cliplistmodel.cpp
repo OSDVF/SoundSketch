@@ -20,22 +20,6 @@ QVariant ClipListModel::data(const QModelIndex &index, int role) const
 {
     Q_UNUSED(role)
     return QVariant::fromValue(static_cast<QObject*>(m_list[index.row()]));
-    /*if (!index.isValid())
-        return QVariant();
-
-    if(role == Qt::DisplayRole)
-        switch (index.column())
-        {
-        case 0:
-            return m_list[index.row()]->m_pos;
-        case 1:
-            return m_list[index.row()]->durationMs();
-        case 2:
-            return m_list[index.row()]->endMs();
-        case 3:
-            return QVariant::fromValue(static_cast<QObject*>(m_list[index.row()]->m_file));
-        }
-    return QVariant();*/
 }
 qreal ClipListModel::totalDurationMs() const
 {
@@ -61,28 +45,18 @@ void ClipListModel::append(qreal posMs, QString audioFileName)
     endInsertRows();
     emit countChanged(m_count);
     emit totalDurationMsChanged();
-    //emit dataChanged(createIndex(len,0), createIndex(len,3));
 }
 
 void ClipListModel::remove(int index)
 {
-    beginRemoveRows(QModelIndex(),index,--m_count);
-    delete m_list[index];
+    beginRemoveRows(QModelIndex(),index,m_count-1);
     m_list.removeAt(index);
-    emit countChanged(m_count);
+    emit countChanged(--m_count);
     emit totalDurationMsChanged();
     endRemoveRows();
 }
 QObject* ClipListModel::get(int index) const
 {
-   /* auto map = QVariantMap();
-    auto item = m_list[index];
-    auto durationMs = item->durationMs();
-    map["posMs"] = item->m_pos;
-    map["durationMs"] = durationMs;
-    map["endMs"] = durationMs + item->m_pos;
-    map["audioFile"] = QVariant::fromValue(static_cast<QObject*>(m_list[index]->m_file));
-    return map;*/
    Q_ASSERT(index >= 0 && index < m_count);
    return m_list[index];
 }
@@ -96,20 +70,6 @@ bool ClipListModel::setData(const QModelIndex &index, const QVariant &value, int
     if (data(index, role) != value)
     {
         m_list[index.row()] = static_cast<ClipItemModel*>(value.value<QObject*>());
-        /*switch (index.column())
-        {
-        case 0:
-            m_list[index.row()]->setPosMs(value.toReal());
-            emit dataChanged(index, index, QVector<int>() << role);
-            return true;
-        case 1:
-        case 2:
-            return false;
-        case 3:
-            m_list[index.row()]->setAudioFile(static_cast<AudioFile*>(value.value<QObject*>()));
-            emit dataChanged(index, index, QVector<int>() << role);
-            return true;
-        }*/
         return true;
     }
     return false;

@@ -85,7 +85,7 @@ Rectangle
                             anchors.bottom: parent.bottom
                             peaceTimeWidth: durationMs * timeline.scale_ms
                             backColor: {
-                                var c = Style.backColors[index % Style.backColors.length];
+                                var c = Style.backColors[Math.max(index,0) % Style.backColors.length];
                                 if(selectedClipIndex === index)
                                 {
                                     return Qt.lighter(c,1.1);
@@ -93,7 +93,7 @@ Rectangle
                                 return c;
                             }
 
-                            waveColor: Style.waveColors[index % Style.waveColors.length]
+                            waveColor: Style.waveColors[Math.max(index,0) % Style.waveColors.length]
                             formatInfoTextColor: Style.formatInfoTextColor
                             onClicked:
                             {
