@@ -1,4 +1,4 @@
-QT += quick
+QT += quick multimedia widgets
 
 CONFIG += c++11
 
@@ -8,8 +8,11 @@ CONFIG += c++11
 
 SOURCES += \
         src/audiofile.cpp \
+        src/audiolevel.cpp \
         src/main.cpp \
-        src/waveformplot.cpp
+        src/recorder.cpp \
+        src/waveformplot.cpp \
+        src/recorder.cpp
 
 RESOURCES += \
         src/qml.qrc
@@ -28,7 +31,10 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 HEADERS += \
     src/WaveformGenerator.h \
     src/audiofile.h \
-    src/waveformplot.h
+    src/audiolvel.h \
+    src/recorder.h \
+    src/waveformplot.h \
+    src/recorder.h
 
 INCLUDEPATH += $$PWD/include
 DEPENDPATH += $$PWD/include
@@ -38,3 +44,5 @@ else:win32:CONFIG(debug, debug|release): LIBS += -L$$PWD/lib/ -lffmpeg-cppd
 else:unix: LIBS += -L$$PWD/lib/ -lffmpeg-cpp
 
 DISTFILES +=
+
+FORMS +=
