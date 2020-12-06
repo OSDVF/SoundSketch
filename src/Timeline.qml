@@ -89,7 +89,7 @@ Slider
             ctx.clearRect(0, 0, width, height)
 
             ctx.strokeStyle = Qt.rgba(1, 0, 0, 0.4)
-            ctx.fillStyle = "white"
+            ctx.fillStyle = "black"
             ctx.lineWidth = 1
 
             ctx.beginPath()

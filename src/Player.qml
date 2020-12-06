@@ -8,7 +8,7 @@ Rectangle
     id: control
     width: parent.width
     height: parent.height
-
+    radius: 5
     readonly property int pos_ms: timeline.pos_ms
     property real maxTime: 50000
 

@@ -13,38 +13,92 @@ ApplicationWindow
     height: 480
     visible: true
     title: qsTr("Hello World")
+    background: Rectangle {
+                implicitWidth: 100
+                implicitHeight: 40
+                color: "#EAF6F3"
+                border.color: "white"
+                border.width: 1
+                //radius: 4
+            }
 
     menuBar: MenuBar {
+        background: Rectangle {
+                    implicitWidth: 100
+                    implicitHeight: 40
+                    color: "#BFE5D9"
+                    border.color: "gainsboro"
+                    border.width: 1
+                    radius: 10
+                }
         FileDialog {
             id: saveDialog
             title: "Save Dialog"
             selectMultiple : false
             selectExisting: false
         }
+
+            //visible: false
+//            Text{
+//                id: about_text
+//                x: 432
+//                y: 253
+//                width: 100
+//                height: width
+//                horizontalAlignment: Text.AlignHCenter
+//                verticalAlignment: Text.AlignVCenter
+//                text: "This application allows you to import your audio file and to work with it.
+//    You can use all the tools we provide to cut, edit, or put notes into your file."
+//            }
+
+
         Menu {
 
-            title: qsTr("&Project")
-            Action { text: qsTr("&New...") }
-            Action { text: qsTr("&Open..."); onTriggered: importDialog.open()}
-            Action { text: qsTr("&Save...");onTriggered: saveDialog.open() }
+            title: qsTr("Project")
+            Action { text: qsTr("New...") }
+            Action { text: qsTr("Open..."); onTriggered: importDialog.open()}
+            Action { text: qsTr("Save...");onTriggered: saveDialog.open() }
             MenuSeparator { }
-            Action { text: qsTr("&Quit"); onTriggered: Qt.quit() }
+            Action { text: qsTr("Quit"); onTriggered: Qt.quit() }
         }
         Menu {
-            title: qsTr("&Edit")
+            title: qsTr("Edit")
             Action
             {
-                text: qsTr("&Import Audio")
+                text: qsTr("Import Audio")
                 onTriggered: importDialog.open()
             }
-            Action { text: qsTr("&Cut") }
-            Action { text: qsTr("&Copy") }
-            Action { text: qsTr("&Paste") }
+            Action { text: qsTr("Cut") }
+            Action { text: qsTr("Copy") }
+            Action { text: qsTr("Paste") }
         }
         Menu {
-            title: qsTr("&Help")
-            Action { text: qsTr("&About") }
+            title: qsTr("Help")
+            Action { text: qsTr("About") /*; onTriggered: about_text.visible = true*/}
         }
+        delegate: MenuBarItem {
+                id: menuBarItem
+
+                contentItem: Text {
+                    text: menuBarItem.text
+                    font: menuBarItem.font
+                    opacity: enabled ? 1.0 : 0.3
+
+                    color: menuBarItem.highlighted ? "dimgray" : "black"
+                    horizontalAlignment: Text.AlignLeft
+                    verticalAlignment: Text.AlignVCenter
+                    elide: Text.ElideRight
+                }
+
+                background: Rectangle {
+                    implicitWidth: 40
+                    implicitHeight: 40
+                    opacity: enabled ? 1 : 0.3
+                    color: "#BFE5D9"
+                    border.color: "gainsboro"
+                    radius: 10
+                }
+            }
     }
 
 
@@ -124,12 +178,10 @@ ApplicationWindow
         ButtonLine
         {
             id: buttonline
-            //y: 400
             width: parent.width*0.2
             anchors.horizontalCenter: parent.horizontalLeft
-            //anchors.top: parent.verticalCenter
             height: parent.height*0.3
-            color: "#ffffff"
+            color: "#EAF6F3"
             anchors.left: parent.left
         }
 
@@ -147,7 +199,7 @@ ApplicationWindow
         title: qsTr("Please choose an audio file")
         nameFilters: [ "Supported containers (*.mp3 *.wav *.aac *.m4a)", "All files (*)" ]
         folder: shortcuts.music
-        //selectExisting: true
+        selectExisting: true
         modality: Qt.ApplicationModal
         onAccepted: {
             importAudio(importDialog.fileUrl.toString(),0)
