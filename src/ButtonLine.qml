@@ -10,11 +10,10 @@ Rectangle{
         var newObject = Qt.createQmlObject('import QtQuick 2.0; Text {color: "cornflowerblue"; x: offset_val ; y: 1000 ; width: 20; height: 20; text: text_for_notes.text }', notes,
                                              "dynamicSnippet1");
         items[note_index] = newObject
+        items[note_index].text = text_for_notes.text;
         for (var x = 0; x < note_index; x++){
             items[x].y = (x*10+4) - 280 ;
         }
-        items[note_index].text = text_for_notes.text
-        //items[note_index].redraw()
         note_index += 1
     }
     id: control
@@ -39,7 +38,9 @@ Rectangle{
                     border.width: 1
                     radius: 10
                 }
-        text: qsTr("Record")
+        icon.color: "transparent"
+        icon.source: "images/record.jpg"
+        icon.width: button.width/3
         onHoveredChanged:  hovered ? button.opacity = 0.7 : button.opacity = 1;
         onClicked: audiorecorder.visible = true
         Audiorecorder{
@@ -60,7 +61,9 @@ Rectangle{
           id: jumpstart
           x: button.width + (button.width/2)
           y: 0
-          text: "jump start"
+          icon.color: "transparent"
+          icon.source: "images/backward.jpg"
+          icon.width: jumpstart.width/3
           width: control.width * 0.6
           height: control.height * 0.4
           background: Rectangle {
@@ -79,7 +82,9 @@ Rectangle{
           id: play
           x: button.width + jumpstart.width + (button.width/2)
           y: 0
-          text: "play"
+          icon.color: "transparent"
+          icon.source: "images/play.jpg"
+          icon.width: play.width/3
           width: control.width * 0.6
           height: control.height * 0.4
           background: Rectangle {
@@ -98,7 +103,9 @@ Rectangle{
           id: jumpend
           x: button.width + jumpstart.width + play.width + (button.width/2)
           y: 0
-          text: "jump end"
+          icon.width: jumpend.width/3
+          icon.color: "transparent"
+          icon.source: "images/forward.jpg"
           width: control.width * 0.6
           height: control.height * 0.4
           background: Rectangle {
@@ -117,7 +124,9 @@ Rectangle{
           id: cut
           x: button.width + jumpstart.width + play.width + jumpend.width + (button.width)
           y: 0
-          text: "cut"
+          icon.width: cut.width/3
+          icon.color: "transparent"
+          icon.source: "images/cut.jpg"
           width: control.width * 0.6
           height: control.height * 0.4
           background: Rectangle {
@@ -136,7 +145,9 @@ Rectangle{
           id: del
           x: button.width + jumpstart.width + play.width + jumpend.width + cut.width + (button.width)
           y: 0
-          text: "del"
+          icon.width: del.width/3
+          icon.color: "transparent"
+          icon.source: "images/del.jpg"
           width: control.width * 0.6
           height: control.height * 0.4
           background: Rectangle {
@@ -159,6 +170,8 @@ Rectangle{
         placeholderText: qsTr("Enter notes")
         visible: false
         anchors.horizontalCenterOffset: 432
+        onEditingFinished:{ items[note_index].visible = true; text_for_notes.visible = false }
+        //Component.onCompleted: items[note_index] = items[note_index]
     }
     Button
     {
@@ -177,19 +190,25 @@ Rectangle{
                       border.color: "gainsboro"
                       border.width: 1
                       radius: 10
+
                   }
           onHoveredChanged:  hovered ? notes.opacity = 0.7 : notes.opacity = 1;
           onClicked: {
+//              if (note_index == 0){
+//                add_note(5);
+//                  note_index += 1
+//              }
               if(text_for_notes.visible == false)
               {
                 text_for_notes.visible = true
                 add_note(5);
+
               }
-              else
-              {
-                  text_for_notes.visible = false
-                  items[note_index].visible = true;
-              }
+//              else
+//              {
+//                  text_for_notes.visible = false
+//                  items[note_index].visible = true;
+//              }
           }
     }
 }

@@ -13,14 +13,6 @@ ApplicationWindow
     height: 480
     visible: true
     title: qsTr("Hello World")
-    background: Rectangle {
-                implicitWidth: 100
-                implicitHeight: 40
-                color: "#EAF6F3"
-                border.color: "white"
-                border.width: 1
-                //radius: 4
-            }
 
     menuBar: MenuBar {
         background: Rectangle {
@@ -29,7 +21,7 @@ ApplicationWindow
                     color: "#BFE5D9"
                     border.color: "gainsboro"
                     border.width: 1
-                    radius: 10
+                    radius: 5
                 }
         FileDialog {
             id: saveDialog
@@ -37,21 +29,6 @@ ApplicationWindow
             selectMultiple : false
             selectExisting: false
         }
-
-            //visible: false
-//            Text{
-//                id: about_text
-//                x: 432
-//                y: 253
-//                width: 100
-//                height: width
-//                horizontalAlignment: Text.AlignHCenter
-//                verticalAlignment: Text.AlignVCenter
-//                text: "This application allows you to import your audio file and to work with it.
-//    You can use all the tools we provide to cut, edit, or put notes into your file."
-//            }
-
-
         Menu {
 
             title: qsTr("Project")
@@ -72,9 +49,10 @@ ApplicationWindow
             Action { text: qsTr("Copy") }
             Action { text: qsTr("Paste") }
         }
+
         Menu {
             title: qsTr("Help")
-            Action { text: qsTr("About") /*; onTriggered: about_text.visible = true*/}
+            Action { text: qsTr("About") ; onTriggered: about_text.visible = true}
         }
         delegate: MenuBarItem {
                 id: menuBarItem
@@ -181,12 +159,69 @@ ApplicationWindow
             width: parent.width*0.2
             anchors.horizontalCenter: parent.horizontalLeft
             height: parent.height*0.3
-            color: "#EAF6F3"
+            color: "white"
             anchors.left: parent.left
         }
 
     }
-
+    Rectangle{
+        id:about_text
+        x: mainWindow.width/4
+        y: 20
+        width:450
+        height: 400
+        color: "#BFE5D9"
+        visible: false
+        border.color: "gainsboro"
+        Text{
+            x: 20
+            y: 50
+            text: "This application is designed for simple and quick audio editing.
+We want the users to be able to capture their thougts, ideas and
+inspirations, and to be able to make simple editing on them. We
+offer a small range of editing tools, which include cutting
+samples, joining samples.Here is a quick overview
+of our tools.
+Adding audio: You can drag and drop your audio, add it through
+menu item Edit->Import audio, or you can record it directly
+in the app by clicking on the microphone button.
+Playing audio: You can play and stop the audio, by pressing
+the play button. You can also jump to the beginning or the end
+of the sample, by clicking on the forward/backward arrows.
+Editing: Audio is cut to the right to the position where the
+marker is put will be deleted when you press the icon of scissors.
+You can delete the whole clip by pressing the trashcan.
+A note is added on the time where marker is, and by pressing notes.
+Working with files:You can save your audio sample,
+and your whole project in the menubar Project->Save.
+You can also open an existing project, in Project->Open."
+            horizontalAlignment: Text.AlignHCenter
+            verticalAlignment: Text.AlignVCenter
+        }
+        Button{
+            id: close
+            x: about_text.width-close.width*2
+            y: 13
+            width: 31
+            height: 21
+            text: qsTr("X")
+            highlighted: false
+            flat: false
+            autoRepeat: false
+            onClicked: {
+                about_text.visible = false
+            }
+            onHoveredChanged:  hovered ? close.opacity = 0.7 : close.opacity = 1;
+            background: Rectangle {
+                        implicitWidth: 100
+                        implicitHeight: 40
+                        color: close.down ? "#d6d6d6" : "ghostwhite"
+                        border.color: "gainsboro"
+                        border.width: 1
+                        radius: 4
+                    }
+        }
+    }
     TabBar
     {
         id: tabBar

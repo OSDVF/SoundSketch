@@ -11,5 +11,11 @@
         <file>AudiorecorderForm.ui.qml</file>
         <file>Header.ui.qml</file>
         <file>audio.qml</file>
+        <file>images/backward.jpg</file>
+        <file>images/cut.jpg</file>
+        <file>images/del.jpg</file>
+        <file>images/forward.jpg</file>
+        <file>images/play.jpg</file>
+        <file>images/record.jpg</file>
     </qresource>
 </RCC>

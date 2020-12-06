@@ -43,6 +43,12 @@ win32:CONFIG(release, debug|release): LIBS += -L$$PWD/lib/ -lffmpeg-cpp
 else:win32:CONFIG(debug, debug|release): LIBS += -L$$PWD/lib/ -lffmpeg-cppd
 else:unix: LIBS += -L$$PWD/lib/ -lffmpeg-cpp
 
-DISTFILES +=
+DISTFILES += \
+    images/backward.jpg \
+    images/cut.jpg \
+    images/del.jpg \
+    images/forward.jpg \
+    images/play.jpg \
+    images/record.jpg
 
 FORMS +=
