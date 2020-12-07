@@ -4,10 +4,6 @@ ClipItemModel::ClipItemModel(QObject *parent)
     : QObject(parent)
 {
 }
-/*ClipItemModel::ClipItemModel(int indexInTimeline,QObject *parent):QObject(parent),m_index(indexInTimeline)
-{
-}
-*/
 qreal ClipItemModel::posMs() const
 {
     return m_pos;
@@ -15,6 +11,16 @@ qreal ClipItemModel::posMs() const
 AudioFile* ClipItemModel::audioFile() const
 {
     return m_file;
+}
+
+void ClipItemModel::setAudioFile(AudioFile *value)
+{
+    if(m_file == value)
+        return;
+    m_file = value;
+    m_duration = m_file->durationMs();
+    emit audioFileChanged();
+
 }
 qreal ClipItemModel::durationMs() const
 {
@@ -24,15 +30,12 @@ qreal ClipItemModel::endMs() const
 {
     return m_duration + m_pos;
 }
-/*int ClipItemModel::index() const
+
+ClipItemModel * ClipItemModel::clone()
 {
-    return m_index;
+    ClipItemModel *newClip = new ClipItemModel(parent());
+    newClip->m_pos = m_pos;
+    newClip->m_duration = m_duration;
+    newClip->m_file = m_file;
+    return newClip;
 }
-void ClipItemModel::setIndex(int index)
-{
-    if(m_index == index)
-        return;
-    m_index = index;
-    emit indexChanged();
-}
-*/

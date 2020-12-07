@@ -28,6 +28,7 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
 
 HEADERS += \
+    src/AudioFileWithWaveformMesh.h \
     src/WaveformGenerator.h \
     src/audiofile.h \
     src/clipitemmodel.h \

@@ -34,15 +34,16 @@ qreal ClipListModel::totalDurationMs() const
 void ClipListModel::append(qreal posMs, QString audioFileName)
 {
     int i = m_list.size();
-    beginInsertRows(QModelIndex(), i, i);
     auto file = new AudioFile();
-    file->setFileUrl(audioFileName);
+    file->openFileUrl(audioFileName);
     auto newItem = new ClipItemModel();
     newItem->setAudioFile(file);
     newItem->m_pos = posMs;
+    beginInsertRows(QModelIndex(), i, i);
     m_list.append(newItem);
     m_count++;
     endInsertRows();
+    reposition(i, posMs, this);//TODO insert at correct index
     emit countChanged(m_count);
     emit totalDurationMsChanged();
 }
@@ -55,10 +56,90 @@ void ClipListModel::remove(int index)
     emit totalDurationMsChanged();
     endRemoveRows();
 }
+
+void ClipListModel::swapItems(int leftIndex, int index)
+{
+    auto swapTemp = m_list[leftIndex];
+    /*auto swapTempFile = swapTemp->m_file;
+
+    m_list[leftIndex]->setAudioFile(m_list[index]->m_file);
+    m_list[index]->setAudioFile(swapTempFile);*/
+
+    m_list[leftIndex] = m_list[index];
+    m_list[index] = swapTemp;
+}
+
+ClipListModel *ClipListModel::copy()
+{
+    ClipListModel *newList = new ClipListModel();
+    copyTo(newList);
+    return newList;
+}
+
+void ClipListModel::copyTo(ClipListModel *newList)
+{
+    newList->m_list.reserve(m_count);
+    newList->m_list.clear();
+    for(int i=0; i<m_count; i++)
+    {
+        auto clone = m_list[i]->clone();
+        newList->m_list.append(clone);
+    }
+    newList->m_count = m_count;
+}
+
+void ClipListModel::clear()
+{
+    for(int i=0; i<m_count; i++)
+    {
+        delete m_list[i];
+    }
+    m_list.clear();
+}
+
+int ClipListModel::reposition(int index, qreal newPos, ClipListModel *previewList, bool swapWithSiblings)
+{
+    /*auto leftIndex = index - 1;
+    auto rightIndex = index + 1;
+    ClipItemModel * thisItem = m_list[index];
+    QList<ClipItemModel *>* preview = &previewList->m_list;
+    if(leftIndex>0)
+    {
+        //Correct positioning
+        ClipItemModel * leftItem = preview->at(leftIndex);
+        if(leftItem->m_pos>newPos)
+        {
+            previewList->beginMoveRows(QModelIndex(),index,index,QModelIndex(),leftIndex);
+            previewList->swapItems(leftIndex,index);
+            endMoveRows();
+
+            index--;
+            leftIndex = index - 1;
+            rightIndex--;
+        }
+    }
+    if(rightIndex < m_count)
+    {
+        //Correct positioning
+        ClipItemModel * rightItem = preview->at(rightIndex);
+        if(rightItem->m_pos<newPos)
+        {
+            previewList->beginMoveRows(QModelIndex(),index,index,QModelIndex(),rightIndex);
+            previewList->swapItems(rightIndex,index);
+            previewList->endMoveRows();
+
+            index++;
+            leftIndex = index - 1;
+            rightIndex++;
+        }
+    }*/
+    return 0;
+}
+
 QObject* ClipListModel::get(int index) const
 {
-   Q_ASSERT(index >= 0 && index < m_count);
-   return m_list[index];
+    Q_ASSERT(index >= 0 && index < m_count);
+    return m_list[index];
 }
 int ClipListModel::count() const
 {

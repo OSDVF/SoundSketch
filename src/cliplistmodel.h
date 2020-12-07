@@ -34,6 +34,18 @@ public:
     Q_INVOKABLE void append(qreal posMs, QString audioFileName);
     Q_INVOKABLE void remove(int index);
     Q_INVOKABLE QObject* get(int index) const;
+    /**
+     * @brief Recalculates positions of surrounding items.
+     * @param index Index of item which is repositioned
+     * @param newPos New item position
+     * @param swapSiblings When true the repositioned item might be swapped with one of its siblings when the newPos is away enough
+     * @returns [int] Index of the most distant item that has been repositioned. -1 when no reposition occured
+     * @attention If newPos is further than any of repositioned item's closest surrounding items, the algorithm will not output correct results
+     */
+    Q_INVOKABLE int reposition(int index, qreal newPos, ClipListModel *previewList, bool swapSiblings = true);
+    Q_INVOKABLE ClipListModel * copy();
+    Q_INVOKABLE void copyTo(ClipListModel* list);
+    Q_INVOKABLE void clear();
 
     QHash<int, QByteArray> roleNames() const override
     {
@@ -55,6 +67,7 @@ signals:
 private:
     QList<ClipItemModel* > m_list;
     int m_count = 0;
+    void swapItems(int leftIndex, int index);
 };
 
 #endif // CLIPLISTMODEL_H

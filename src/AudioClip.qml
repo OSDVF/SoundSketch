@@ -15,13 +15,13 @@ Rectangle {
 
     property color waveColor: "#AAAAAA"
     property color formatInfoTextColor: "white"
-    readonly property real durationMs: plot.durationMs
+    property string debugText: ""
+    readonly property real durationMs: plot.audioFile.durationMs
     property var audioFile
-    function loadAudioFile(audioFileToLoad) {
-        audioFile = audioFileToLoad
-        plot.loadOpenedFile(audioFileToLoad)
-    }
     signal clicked(var mouse)
+    signal alternativePress(var mouse)
+    signal released(var mouse)
+    signal mousePosChanged(var mouse)
 
     border.color: Qt.lighter(backColor,1.2)
     border.width: 2
@@ -33,6 +33,7 @@ Rectangle {
         anchors.fill: parent
         rmsColor: Qt.darker(waveColor)
         peakColor: waveColor
+        audioFile: mainRect.audioFile
         Rectangle {
             color: "#5c000000"
             radius: 5
@@ -58,11 +59,24 @@ Rectangle {
                     color: formatInfoTextColor
                     text: audioFile.format
                 }
+                Text {
+                    text: debugText
+                }
             }
         }
         MouseArea {
+            id: mouseArea
             anchors.fill: parent
             onClicked: mainRect.clicked(mouse)
+            onPositionChanged: mainRect.mousePosChanged(mouse)
+            onPressAndHold: mainRect.alternativePress(mouse)
+            onPressed: {
+                if(Qt.platform.os == "windows")//Do not do it on Android
+                    mainRect.alternativePress(mouse)
+            }
+            onReleased: {
+                mainRect.released(mouse)
+            }
         }
     }
     Text {
@@ -71,10 +85,10 @@ Rectangle {
         horizontalAlignment: Text.AlignHCenter
         verticalAlignment: Text.AlignVCenter
         wrapMode: Text.WordWrap
-        text: plot.exception
+        text: plot.audioFile.exception
         anchors.fill: parent
         anchors.margins: 10
-        visible: plot.hasException
+        visible: plot.audioFile.hasException
     }
 }
 

@@ -6,7 +6,7 @@
 
 namespace ffmpegcpp
 {
-    class FFmpegException : public std::exception
+	class FFmpegException : std::exception
 	{
 
 	public:

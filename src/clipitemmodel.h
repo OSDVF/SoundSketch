@@ -8,7 +8,7 @@ class ClipItemModel:QObject
 {
     Q_OBJECT
     Q_PROPERTY(qreal posMs READ posMs WRITE setPosMs NOTIFY posMsChanged)
-    Q_PROPERTY(qreal durationMs READ durationMs NOTIFY durationMsChanged STORED false)
+    Q_PROPERTY(qreal durationMs READ durationMs NOTIFY audioFileChanged STORED false)
     Q_PROPERTY(qreal endMs READ endMs NOTIFY endMsChanged STORED false)
     Q_PROPERTY(AudioFile* audioFile READ audioFile WRITE setAudioFile NOTIFY audioFileChanged)
     //Q_PROPERTY(int m_index READ index NOTIFY indexChanged)
@@ -30,21 +30,13 @@ public:
             return;
         m_pos = value;
         emit posMsChanged();
-        emit durationMsChanged();
     }
-    void setAudioFile(AudioFile* value)
-    {
-        if(m_file == value)
-            return;
-        m_file = value;
-        m_duration = m_file->durationUs()/1000;
-        emit audioFileChanged();
-        emit durationMsChanged();
-    }
+    void setAudioFile(AudioFile* value);
+
+    ClipItemModel *clone();
 
 signals:
     void posMsChanged();
-    void durationMsChanged();
     void endMsChanged();
     void audioFileChanged();
     //void indexChanged();

@@ -29,6 +29,11 @@ Rectangle
     ClipListModel {
         id: clipList
     }
+    ClipListModel {
+        id: repositionPreview
+    }
+    property bool dragOngoing: false
+    property bool repositionSuccess: false
 
     Rectangle
     {
@@ -78,12 +83,15 @@ Rectangle
 
                     Repeater //Reads the list of clips and displays them in the timeline
                     {
+                        id: listDisplay
                         model: clipList
                         AudioClip {
+                            audioFile: model.clipItemModel.audioFile
                             x: model.clipItemModel.posMs * timeline.scale_ms
                             anchors.top: parent.top
                             anchors.bottom: parent.bottom
                             peaceTimeWidth: durationMs * timeline.scale_ms
+                            debugText: index.toString()
                             backColor: {
                                 var c = Style.backColors[Math.max(index,0) % Style.backColors.length];
                                 if(selectedClipIndex === index)
@@ -99,9 +107,31 @@ Rectangle
                             {
                                 selectedClipIndex = index;
                             }
-                        }
-                        onItemAdded: {
-                            item.loadAudioFile(model.get(index).audioFile)
+                            onAlternativePress: {
+                                dragOngoing = true
+                                selectedClipIndex = index;
+                                console.log("Drag Started")
+                                clipList.copyTo(repositionPreview);
+                                listDisplay.model = repositionPreview
+                            }
+
+                            onMousePosChanged: {
+                                if(dragOngoing)
+                                {
+                                    repositionSuccess = clipList.reposition(index,mouse.x,repositionPreview) !== -1
+                                }
+                            }
+                            onReleased: {
+                                dragOngoing = false
+                                console.log("Ended")
+                                if(repositionSuccess)
+                                {
+                                    console.log("Success")
+                                    //repositionPreview.copyTo(clipList)//Update list with preview result
+                                }
+                                listDisplay.model = clipList
+                                repositionPreview.clear()
+                            }
                         }
                     }
                 }
