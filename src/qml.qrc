@@ -10,7 +10,6 @@
         <file>Audiorecorder.qml</file>
         <file>AudiorecorderForm.ui.qml</file>
         <file>Header.ui.qml</file>
-        <file>audio.qml</file>
         <file>images/backward.jpg</file>
         <file>images/cut.jpg</file>
         <file>images/del.jpg</file>
