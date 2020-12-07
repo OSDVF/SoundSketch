@@ -54,6 +54,23 @@ Rectangle
 
             MouseArea
             {
+                id: clipsMouseArea
+                function endReposition(mouse)
+                {
+                    if(dragOngoing)
+                    {
+                        dragOngoing = false
+                        console.log("Ended")
+                        if(repositionSuccess)
+                        {
+                            console.log("Success")
+                            repositionPreview.copyTo(clipList)//Update list with preview result
+                        }
+                        listDisplay.model = clipList
+                        repositionPreview.clear()
+                    }
+                }
+
                 anchors.fill: parent
                 onWheel:
                 {
@@ -72,6 +89,7 @@ Rectangle
                         timeline.value = mouseX / width;
                     }
                 }
+                onReleased: endReposition(mouse)
 
                 Flickable
                 {
@@ -106,6 +124,7 @@ Rectangle
                             onClicked:
                             {
                                 selectedClipIndex = index;
+                                endReposition();
                             }
                             onAlternativePress: {
                                 dragOngoing = true
@@ -121,17 +140,7 @@ Rectangle
                                     repositionSuccess = clipList.reposition(index,mouse.x,repositionPreview) !== -1
                                 }
                             }
-                            onReleased: {
-                                dragOngoing = false
-                                console.log("Ended")
-                                if(repositionSuccess)
-                                {
-                                    console.log("Success")
-                                    //repositionPreview.copyTo(clipList)//Update list with preview result
-                                }
-                                listDisplay.model = clipList
-                                repositionPreview.clear()
-                            }
+                            onReleased: clipsMouseArea.endReposition(mouse)
                         }
                     }
                 }

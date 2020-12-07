@@ -33,19 +33,31 @@ qreal ClipListModel::totalDurationMs() const
 
 void ClipListModel::append(qreal posMs, QString audioFileName)
 {
-    int i = m_list.size();
     auto file = new AudioFile();
     file->openFileUrl(audioFileName);
     auto newItem = new ClipItemModel();
     newItem->setAudioFile(file);
     newItem->m_pos = posMs;
-    beginInsertRows(QModelIndex(), i, i);
-    m_list.append(newItem);
+
+    int newIndex = getIndexForNewItem(posMs);
+    emit layoutAboutToBeChanged();
+    m_list.insert(newIndex, newItem);
+
     m_count++;
-    endInsertRows();
-    reposition(i, posMs, this);//TODO insert at correct index
+    emit layoutChanged();
     emit countChanged(m_count);
     emit totalDurationMsChanged();
+}
+
+int ClipListModel::getIndexForNewItem(qreal posMs)
+{
+    for(int i =0; i<m_count;i++)
+    {
+        if(m_list[i]->m_pos > posMs)
+        {
+            return i;
+        }
+    }
 }
 
 void ClipListModel::remove(int index)
@@ -94,12 +106,14 @@ void ClipListModel::clear()
     {
         delete m_list[i];
     }
+    m_count = 0;
     m_list.clear();
+    emit countChanged(m_count);
 }
 
 int ClipListModel::reposition(int index, qreal newPos, ClipListModel *previewList, bool swapWithSiblings)
 {
-    /*auto leftIndex = index - 1;
+    auto leftIndex = index - 1;
     auto rightIndex = index + 1;
     ClipItemModel * thisItem = m_list[index];
     QList<ClipItemModel *>* preview = &previewList->m_list;
@@ -109,9 +123,11 @@ int ClipListModel::reposition(int index, qreal newPos, ClipListModel *previewLis
         ClipItemModel * leftItem = preview->at(leftIndex);
         if(leftItem->m_pos>newPos)
         {
-            previewList->beginMoveRows(QModelIndex(),index,index,QModelIndex(),leftIndex);
+            emit layoutAboutToBeChanged();
+            //previewList->beginMoveRows(QModelIndex(),index,index,QModelIndex(),rightIndex);//Moves before the rightIndex
             previewList->swapItems(leftIndex,index);
-            endMoveRows();
+            //endMoveRows();
+            emit layoutChanged();
 
             index--;
             leftIndex = index - 1;
@@ -124,15 +140,17 @@ int ClipListModel::reposition(int index, qreal newPos, ClipListModel *previewLis
         ClipItemModel * rightItem = preview->at(rightIndex);
         if(rightItem->m_pos<newPos)
         {
-            previewList->beginMoveRows(QModelIndex(),index,index,QModelIndex(),rightIndex);
+            //previewList->beginMoveRows(QModelIndex(),index,index,QModelIndex(),index);//Moves left
+            emit layoutAboutToBeChanged();
             previewList->swapItems(rightIndex,index);
-            previewList->endMoveRows();
+            //previewList->endMoveRows();
+            emit layoutChanged();
 
             index++;
             leftIndex = index - 1;
             rightIndex++;
         }
-    }*/
+    }
     return 0;
 }
 

@@ -68,6 +68,7 @@ private:
     QList<ClipItemModel* > m_list;
     int m_count = 0;
     void swapItems(int leftIndex, int index);
+    int getIndexForNewItem(qreal posMs);
 };
 
 #endif // CLIPLISTMODEL_H
