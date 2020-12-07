@@ -10,7 +10,7 @@ Rectangle{
         var newObject = Qt.createQmlObject('import QtQuick 2.0; Text {color: "cornflowerblue"; x: offset_val ; y: 1000 ; width: 20; height: 20; text: text_for_notes.text }', notes,
                                              "dynamicSnippet1");
         items[note_index] = newObject
-        items[note_index].text = text_for_notes.text;
+        //items[note_index].text = text_for_notes.text;
         for (var x = 0; x < note_index; x++){
             items[x].y = (x*10+4) - 280 ;
         }
@@ -200,6 +200,7 @@ Rectangle{
 //              }
               if(text_for_notes.visible == false)
               {
+                  add_note(5);
                 text_for_notes.visible = true
                 add_note(5);
 

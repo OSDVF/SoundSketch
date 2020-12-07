@@ -10,9 +10,7 @@ SOURCES += \
         src/audiofile.cpp \
         src/audiolevel.cpp \
         src/main.cpp \
-        src/recorder.cpp \
-        src/waveformplot.cpp \
-        src/recorder.cpp
+        src/waveformplot.cpp
 
 RESOURCES += \
         src/qml.qrc
@@ -32,9 +30,7 @@ HEADERS += \
     src/WaveformGenerator.h \
     src/audiofile.h \
     src/audiolvel.h \
-    src/recorder.h \
-    src/waveformplot.h \
-    src/recorder.h
+    src/waveformplot.h
 
 INCLUDEPATH += $$PWD/include
 DEPENDPATH += $$PWD/include
