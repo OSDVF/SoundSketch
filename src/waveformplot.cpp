@@ -4,7 +4,7 @@
 #include <QSGGeometryNode>
 #include <QSGSimpleRectNode>
 #include <QUrl>
-#include "WaveformGenerator.h"
+#include "AudioFileWithWaveformMesh.h"
 #include <algorithm> //for std::min
 
 WaveformPlot::WaveformPlot(QQuickItem *parent):QQuickItem(parent), m_geometryChanged(false)
@@ -12,19 +12,9 @@ WaveformPlot::WaveformPlot(QQuickItem *parent):QQuickItem(parent), m_geometryCha
     setFlag(ItemHasContents, true);
 }
 
-qreal WaveformPlot::durationMs()
+AudioFile *WaveformPlot::audioFile()
 {
-    return m_duration;
-}
-
-bool WaveformPlot::hasException()
-{
-    return m_exception;
-}
-
-QString WaveformPlot::exception()
-{
-    return m_exceptionMessage;
+    return m_audioFile;
 }
 
 QColor WaveformPlot::rmsColor()
@@ -64,18 +54,6 @@ void WaveformPlot::setPeakColor(QColor color)
     }
 }
 
-QByteArray WaveformPlot::samples()
-{
-    return m_samples;
-}
-void WaveformPlot::setSamples(QByteArray byteArray)
-{
-    if(m_samples == byteArray)
-        return;
-    m_samples = byteArray;
-    emit samplesUpdated();
-}
-
 void WaveformPlot::geometryChanged(const QRectF &newGeometry, const QRectF &oldGeometry)
 {
     m_geometryChanged = true;
@@ -93,9 +71,10 @@ void WaveformPlot::createWaveformMesh(QSGGeometry *peaksGeometry,QSGGeometry *rm
 
     auto peaksVertices = peaksGeometry->vertexDataAsPoint2D();
     auto rmsVertieces = rmsGeometry->vertexDataAsPoint2D();
-
+    auto& samples = m_audioFile->waveformBuffer;
+    auto data = samples.constData();
     float zeroY = height/2;
-    auto samplesCount = m_samples.size();
+    auto samplesCount = samples.size();
     auto samplesPerPixel = (samplesCount/width);
     int maxVerticeIndex = width * 2;
 
@@ -109,11 +88,11 @@ void WaveformPlot::createWaveformMesh(QSGGeometry *peaksGeometry,QSGGeometry *rm
         float meanSample = 0;
         for(int s = minIndex;s<maxIndex;s++)
         {
-            auto singleSample = m_samples.constData()[s];
+            auto singleSample = data[s];
             if(singleSample>maxSample) maxSample = singleSample;
             meanSample += singleSample*singleSample;
         }
-        auto normalizationConst = (zeroY/CHAR_MAX*2);
+        auto normalizationConst = (zeroY/(CHAR_MAX*2));
         float normalized = maxSample * normalizationConst;
         auto firstVerticeIndex = (i*2)% maxVerticeIndex;
         auto secondVerticeIndex = ((i*2)+1 )% maxVerticeIndex;
@@ -132,9 +111,24 @@ void WaveformPlot::createWaveformMesh(QSGGeometry *peaksGeometry,QSGGeometry *rm
 QSGNode *WaveformPlot::updatePaintNode(QSGNode *parentNode, UpdatePaintNodeData *)
 {
     QRectF rect = boundingRect();
+    AudioFileWithWaveformMesh * audioMeshFile = dynamic_cast<AudioFileWithWaveformMesh *>(m_audioFile);
     if (rect.isEmpty()) {
         delete parentNode;
+        if(audioMeshFile != nullptr)
+            audioMeshFile->waveformMeshNode = nullptr;
         return nullptr;
+    }
+    if(m_updateMeshWithPool && audioMeshFile != nullptr && audioMeshFile->waveformMeshNode != nullptr)
+    {
+        if(audioMeshFile->waveformMeshNode != parentNode)//audioFile->this copy direction
+        {
+            if(parentNode != nullptr)
+                delete parentNode;
+            m_geometryChanged = false;
+            m_updateMeshWithPool = false;
+            return audioMeshFile->waveformMeshNode;
+        }
+        m_updateMeshWithPool = false;
     }
     QSGGeometry *peaksGeometry;
     QSGGeometry *rmsGeometry;
@@ -148,12 +142,14 @@ QSGNode *WaveformPlot::updatePaintNode(QSGNode *parentNode, UpdatePaintNodeData 
     if(!parentNode)
     {
         parentNode = new QSGNode;
+        if(audioMeshFile != nullptr)
+            audioMeshFile->waveformMeshNode = parentNode;
 
         //Create nodes, materials, geometry and background rectangle
         peaksNode = new QSGGeometryNode;
         rmsNode = new QSGGeometryNode;
-        rmsGeometry = new QSGGeometry(QSGGeometry::defaultAttributes_Point2D(), linesVertexCount);
-        peaksGeometry = new QSGGeometry(QSGGeometry::defaultAttributes_Point2D(), linesVertexCount);
+        rmsGeometry = new QSGGeometry(QSGGeometry::defaultAttributes_Point2D(), ceil(linesVertexCount));
+        peaksGeometry = new QSGGeometry(QSGGeometry::defaultAttributes_Point2D(), ceil(linesVertexCount));
 
         QSGFlatColorMaterial *peaksMaterial = new QSGFlatColorMaterial;
         peaksMaterial->setColor(m_peakColor);
@@ -166,7 +162,7 @@ QSGNode *WaveformPlot::updatePaintNode(QSGNode *parentNode, UpdatePaintNodeData 
         rmsNode->setMaterial(rmsMaterial);
         rmsNode->setFlag(QSGNode::OwnsMaterial);
 
-        if(m_samples.size() != 0)
+        if(m_audioFile->waveformBuffer.size() != 0)
         {
             createWaveformMesh(peaksGeometry,rmsGeometry,width,height);
         }
@@ -185,15 +181,24 @@ QSGNode *WaveformPlot::updatePaintNode(QSGNode *parentNode, UpdatePaintNodeData 
         peaksNode = static_cast<QSGGeometryNode*>(parentNode->childAtIndex(0));
         rmsNode = static_cast<QSGGeometryNode*>(parentNode->childAtIndex(1));
 
-        rmsGeometry = new QSGGeometry(QSGGeometry::defaultAttributes_Point2D(), linesVertexCount);
-        peaksGeometry = new QSGGeometry(QSGGeometry::defaultAttributes_Point2D(), linesVertexCount);
+        rmsGeometry = new QSGGeometry(QSGGeometry::defaultAttributes_Point2D(), ceil(linesVertexCount));
+        peaksGeometry = new QSGGeometry(QSGGeometry::defaultAttributes_Point2D(), ceil(linesVertexCount));
 
-        if(m_samples.size() != 0)
+        if(m_audioFile->waveformBuffer.size() != 0)
         {
             createWaveformMesh(peaksGeometry,rmsGeometry,width,height);
         }
         peaksNode->setGeometry(peaksGeometry);
         rmsNode->setGeometry(rmsGeometry);
+    }
+
+    if(m_updateMeshWithPool)//this->audioFile direction
+    {
+        if(parentNode != nullptr)
+        {
+            m_updateMeshWithPool = false;
+            audioMeshFile->waveformMeshNode = parentNode;
+        }
     }
 
     m_geometryChanged = false;
@@ -204,53 +209,37 @@ QSGNode *WaveformPlot::updatePaintNode(QSGNode *parentNode, UpdatePaintNodeData 
  * @brief WaveformPlot::openFile
  * @param url Unified resource locator of imported file (file://)
  */
-void WaveformPlot::openFile(QString url)
+void WaveformPlot::openFileAndGenerate(QString url)
 {
-    try
-    {
-        WaveformGenerator::openFile(QUrl(url).toLocalFile(),m_samples,m_duration);
-        m_geometryChanged = true;
-        if(m_exception)
-        {
-            m_exception = false;
-            m_exceptionMessage.clear();
-            emit exceptionChanged();
-        }
-    }
-    catch(std::exception& e)
-    {
-        m_exception = true;
-        m_exceptionMessage = QString(e.what());
-        emit exceptionChanged();
-    }
+    if(m_audioFile != nullptr)
+        delete m_audioFile;
+    m_audioFile = new AudioFileWithWaveformMesh();
+    m_audioFile->openFileUrl(url);
 
-    emit samplesUpdated();
-    emit durationUpdated();
+    emit audioFileChanged();
     update();
 }
 
-void WaveformPlot::loadOpenedFile(AudioFile* file)
+void WaveformPlot::connectToFile(AudioFile* file)
 {
-    try
+    if(file == m_audioFile)
+        return;
+
+    if((m_audioFile = dynamic_cast<AudioFileWithWaveformMesh *>(file) )!= nullptr)
     {
-        WaveformGenerator::generateFrom(QUrl(file->fileUrl()).toLocalFile(),m_samples);
-        m_duration = file->durationUs()/1000;
-        m_geometryChanged = true;
-        if(m_exception)
-        {
-            m_exception = false;
-            m_exceptionMessage.clear();
-            emit exceptionChanged();
-        }
+        m_updateMeshWithPool = true;
     }
-    catch(std::exception& e)
+    else
     {
-        m_exception = true;
-        m_exceptionMessage = QString(e.what());
-        emit exceptionChanged();
+        m_audioFile = file;
+    }
+    m_geometryChanged = true;
+
+    if(m_audioFile->waveformBuffer.size() == 0)
+    {
+        m_audioFile->loadWaveform();
     }
 
-    emit samplesUpdated();
-    emit durationUpdated();
+    emit audioFileChanged();
     update();
 }

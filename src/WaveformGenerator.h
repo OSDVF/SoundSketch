@@ -29,7 +29,7 @@ public:
         {
             qDebug() << "Exception caught!";
             qDebug() << e.what();//log and..
-            throw e;//rethrow
+            throw;
         }
     }
     static void openFile(QString path,QByteArray& byteArray,qreal& duration)
@@ -48,7 +48,7 @@ public:
         {
             qDebug() << "Exception caught!";
             qDebug() << e.what();//log and..
-            throw e;//rethrow
+            throw;//rethrow
         }
     }
 private:

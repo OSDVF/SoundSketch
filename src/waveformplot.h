@@ -5,33 +5,25 @@
 #include <QQuickItem>
 #include <QSGGeometry>
 #include "audiofile.h"
+#include "AudioFileWithWaveformMesh.h"
 
 /**
- * @brief Displays an audio waveform represented by 8byte values in the samples property.
- * Use openFile() to open an audio file.
- * @note Uses ffmepg internally to generate the waveforms
+ * @brief Displays an audio waveform represented by AudiFile's waveformBuffer
+ * Use openFileAndGenerate to open an audio file or connectToFile to load a waveform from an existing file
  */
 class WaveformPlot : public QQuickItem
 {
     Q_OBJECT
-    Q_PROPERTY(QByteArray samples READ samples WRITE setSamples NOTIFY samplesUpdated)
     Q_PROPERTY(QColor rmsColor READ rmsColor WRITE setRmsColor NOTIFY colorsChanged)
     Q_PROPERTY(QColor peakColor READ peakColor WRITE setPeakColor NOTIFY colorsChanged)
-    Q_PROPERTY(qreal durationMs READ durationMs NOTIFY durationUpdated)
-    Q_PROPERTY(bool hasException READ hasException NOTIFY exceptionChanged)
-    Q_PROPERTY(QString exception READ exception NOTIFY exceptionChanged)
+    Q_PROPERTY(AudioFile* audioFile READ audioFile WRITE connectToFile NOTIFY audioFileChanged)
     QML_ELEMENT
 
 public:
-
-    QByteArray samples();
-    void setSamples(QByteArray byteArray);
-
+    AudioFile * audioFile();
     QColor rmsColor();
     QColor peakColor();
     qreal durationMs();
-    QString exception();
-    bool hasException();
 
     void setRmsColor(QColor color);
     void setPeakColor(QColor color);
@@ -39,34 +31,23 @@ public:
 
 
     WaveformPlot(QQuickItem *parent = 0);
-    Q_INVOKABLE void openFile(QString url);
-    Q_INVOKABLE void loadOpenedFile(AudioFile* file);
+    Q_INVOKABLE void openFileAndGenerate(QString url);
+    void connectToFile(AudioFile* file);
 
 protected:
     QSGNode *updatePaintNode(QSGNode *, UpdatePaintNodeData *);
     void geometryChanged(const QRectF &newGeometry, const QRectF &oldGeometry);
 
 signals:
-    /**
-     * @brief Emitted right after a file is imported but before the control is redrawn
-     */
-    void samplesUpdated();
-    /**
-     * @brief Emitted right after a file is imported but before the control is redrawn
-     */
-    void durationUpdated();
-    void exceptionChanged();
     void colorsChanged();
+    void audioFileChanged();
 
 private:
-    QByteArray m_samples;
+    AudioFile * m_audioFile = nullptr;
     bool m_geometryChanged;
     QColor m_rmsColor = QColor(110,110,110);
     QColor m_peakColor = QColor(170,170,170);
-    qreal m_duration;
-    //Indicates an exception while opening the file
-    bool m_exception;
-    QString m_exceptionMessage;
+    bool m_updateMeshWithPool = false;
     void createWaveformMesh(QSGGeometry *peaksGeometry,QSGGeometry *rmsGeometry,float width,float height);
 };
 

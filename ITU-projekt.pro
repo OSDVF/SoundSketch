@@ -9,6 +9,8 @@ CONFIG += c++11
 SOURCES += \
         src/audiofile.cpp \
         src/audiolevel.cpp \
+        src/clipitemmodel.cpp \
+        src/cliplistmodel.cpp \
         src/main.cpp \
         src/waveformplot.cpp
 
@@ -27,9 +29,12 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
 
 HEADERS += \
+    src/AudioFileWithWaveformMesh.h \
     src/WaveformGenerator.h \
     src/audiofile.h \
     src/audiolvel.h \
+    src/clipitemmodel.h \
+    src/cliplistmodel.h \
     src/waveformplot.h
 
 INCLUDEPATH += $$PWD/include

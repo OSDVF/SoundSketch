@@ -5,6 +5,7 @@ import QtQuick.Dialogs 1.3
 import QtQuick.Layouts 1.3
 import QtQuick.Controls 2.4
 //import Qt.labs.platform 1.1
+import itu.project.backend 1.0
 
 ApplicationWindow
 {
@@ -120,8 +121,6 @@ ApplicationWindow
             anchors.horizontalCenter: parent.horizontalCenter
             width: parent.width
             height: parent.height * 0.6
-            maxTime: openedProjectModel.totalDurationMs
-
             onDropped: importAudio(drop.text,drop.x)
         }
 
@@ -161,6 +160,7 @@ ApplicationWindow
             height: parent.height*0.3
             color: "white"
             anchors.left: parent.left
+            onDel: player.deleteSelectedClip()
         }
 
     }
@@ -244,19 +244,7 @@ You can also open an existing project, in Project->Open."
     {
         id: openedProjectModel
         property string filePath: ""
-        property ListModel clips: player.clipList
-
-        //Computed properties
-        readonly property real totalDurationMs:
-        {
-            if (clips.count == 0)
-                return 50000 //Default for empty projects
-
-            var lastClip = clips.get(clips.count - 1)
-
-            return lastClip.posMs + lastClip.durationMs
-        }
-        
+        property ClipListModel clips: player.clipList
     }
 }
 

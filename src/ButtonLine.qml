@@ -16,12 +16,15 @@ Rectangle{
         }
         note_index += 1
     }
+    signal play()
+    signal del()
     id: control
     height: parent.height
     property double value: 0
     property double note_y_pos: -270
     property variant items: ["", "", "", "", ""]
     property double note_index: 0
+
 
 
     Button {
@@ -81,6 +84,7 @@ Rectangle{
     {
           id: play
           x: button.width + jumpstart.width + (button.width/2)
+          onClicked: play()
           y: 0
           icon.color: "transparent"
           icon.source: "images/play.jpg"
@@ -144,6 +148,7 @@ Rectangle{
     {
           id: del
           x: button.width + jumpstart.width + play.width + jumpend.width + cut.width + (button.width)
+          onClicked: control.del()
           y: 0
           icon.width: del.width/3
           icon.color: "transparent"
