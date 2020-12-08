@@ -46,11 +46,10 @@ HEADERS += \
 INCLUDEPATH += $$PWD/include
 DEPENDPATH += $$PWD/include
 
-win32:CONFIG(release, debug|release): LIBS += -L$$PWD/lib/ -lffmpeg-cpp
-else:win32:CONFIG(debug, debug|release): LIBS += -L$$PWD/lib/ -lffmpeg-cppd
-else:unix: LIBS += -L$$PWD/lib/ -lffmpeg-cpp
-
 DISTFILES += \
+    android/AndroidManifest.xml \
+    android/build.gradle \
+    android/res/values/libs.xml \
     images/backward.jpg \
     images/cut.jpg \
     images/del.jpg \
@@ -59,3 +58,12 @@ DISTFILES += \
     images/record.jpg
 
 FORMS +=
+
+ANDROID_ABIS = aarm64-v8a
+
+ANDROID_PACKAGE_SOURCE_DIR = $$PWD/android
+
+android
+{
+    LIBS += -L$$PWD/android/libs/
+}

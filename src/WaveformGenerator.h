@@ -5,19 +5,16 @@
 #include <QDebug>
 #include <string>
 
-#include "ffmpegcpp.h"
-using namespace ffmpegcpp;
-
 /**
  * @brief Generates waverom buffer and outputs duration of imported sound.
  * @example WaveformGenerator::generateFrom(path,byteArray,duration_ms)
  */
-class WaveformGenerator : public AudioFrameSink, public FrameWriter
+class WaveformGenerator //: public AudioFrameSink, public FrameWriter
 {
 public:
     static void generateFrom(QString path,QByteArray& byteArray)
     {
-        try
+        /*try
         {
             std::string str = path.toStdString();
             const char* p = str.c_str();
@@ -30,11 +27,11 @@ public:
             qDebug() << "Exception caught!";
             qDebug() << e.what();//log and..
             throw;
-        }
+        }*/
     }
     static void openFile(QString path,QByteArray& byteArray,qreal& duration)
     {
-        try
+        /*try
         {
             std::string str = path.toStdString();
             const char* p = str.c_str();
@@ -49,10 +46,10 @@ public:
             qDebug() << "Exception caught!";
             qDebug() << e.what();//log and..
             throw;//rethrow
-        }
+        }*/
     }
 private:
-    static void generateFromStream(Demuxer *& demuxer,QByteArray& byteArray)
+    /*static void generateFromStream(Demuxer *& demuxer,QByteArray& byteArray)
     {
         WaveformGenerator sink(byteArray);
         const char *fname = demuxer->GetFileName();
@@ -82,18 +79,18 @@ private:
 
         // done
         byteArray.resize(sink.bufferIndex);
-    }
+    }*/
 
 protected:
     WaveformGenerator(QByteArray& byteArray):byteArray(byteArray) {
     }
     ~WaveformGenerator()
     {
-        if(stream != nullptr)
-            delete stream;
+        /*if(stream != nullptr)
+            delete stream;*/
     }
 
-    FrameSinkStream* CreateStream()
+    /*FrameSinkStream* CreateStream()
     {
         stream = new FrameSinkStream(this, 0);
         return stream;
@@ -173,7 +170,7 @@ protected:
         processedFrames++;
     }
 
-    virtual void Close( int /* unused */)
+    virtual void Close( int )
     {
         delete stream;
         stream = nullptr;
@@ -191,10 +188,10 @@ protected:
     void setFrameCount(int c)
     {
         frameCount = c;
-    }
+    }*/
 
 private:
-    FrameSinkStream* stream = nullptr;
+    //FrameSinkStream* stream = nullptr;
     QByteArray& byteArray;
     int frameCount = 1;
     int processedFrames = 0;

@@ -4,8 +4,6 @@
 #include <QObject>
 #include <QtQuick>
 #include <QByteArray>
-#include "ffmpegcpp.h"
-using namespace ffmpegcpp;
 
 /**
  * @brief Hold properties of an audio file container

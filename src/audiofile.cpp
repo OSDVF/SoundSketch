@@ -62,7 +62,7 @@ void AudioFile::openFileUrl(QString url){
     const char* fname = stdStr.c_str();
     try
     {
-        Demuxer* demuxer = new Demuxer(fname);
+        /*Demuxer* demuxer = new Demuxer(fname);
         ContainerInfo info = demuxer->GetInfo();
 
         m_duration = info.durationInMicroSeconds / 1000;
@@ -81,10 +81,10 @@ void AudioFile::openFileUrl(QString url){
             throw FFmpegException(std::string("Could not find ") + av_get_media_type_string(AVMEDIA_TYPE_AUDIO) + " stream in input file " + stdStr,m_audioStreamIndex);
         }
         m_audioStreamId = demuxer->containerContext->streams[m_audioStreamIndex]->id;//But we need the stream id too
-        m_frames = demuxer->GetFrameCount(m_audioStreamId);//Will process entire stream!*/
+        m_frames = demuxer->GetFrameCount(m_audioStreamId);//Will process entire stream!
         clearException();
         if(demuxer != nullptr)
-            delete demuxer;
+            delete demuxer;*/
     }
     catch (const std::exception& e)
     {
