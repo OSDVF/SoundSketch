@@ -38,10 +38,18 @@ void ClipListModel::append(qreal posMs, QString audioFileName)
     auto newItem = new ClipItemModel();
     newItem->setAudioFile(file);
     newItem->m_pos = posMs;
+    auto duration = newItem->m_duration;
 
-    int newIndex = getIndexForNewItem(posMs);
+    int correctIndex = getIndexForNewItem(posMs, duration);
+    qreal correctPos = getCorrectPosForNewItem(posMs, duration, correctIndex);
+    if(newItem->m_duration == 0)
+        qWarning("Adding clip with zero duration.");
+
+    newItem->m_pos = correctPos;
+    //correctIndex = getIndexForNewItem(correctPos, duration);//Correct the index according to the new position
+
     emit layoutAboutToBeChanged();
-    m_list.insert(newIndex, newItem);
+    m_list.insert(correctIndex, newItem);
 
     m_count++;
     emit layoutChanged();
@@ -49,24 +57,91 @@ void ClipListModel::append(qreal posMs, QString audioFileName)
     emit totalDurationMsChanged();
 }
 
-int ClipListModel::getIndexForNewItem(qreal posMs)
+int ClipListModel::getIndexForNewItem(qreal posMs, qreal duration)
 {
-    for(int i =0; i<m_count;i++)
+    for(int i =0; i<m_count; i++)
     {
         if(m_list[i]->m_pos > posMs)
         {
+            if(i - 1 >= 0 )//If we are iterating not the first item
+            {
+                auto prevItem = m_list[i - 1];
+                if(prevItem->m_pos + prevItem->m_duration + duration >= m_list[i]->m_pos)//If newly added item at this position would overlap the next item
+                {
+                    continue;
+                }
+            }
+            else if (i < m_count)//Sync with next item (it will be i+1, but now it is at index 'i')
+            {
+                auto nextItem = m_list[i];
+                if (nextItem->m_pos < nextItem->endMs() && nextItem->m_pos > posMs)
+                {
+                    continue;
+                }
+            }
             return i;
         }
     }
+    //This should be reached when item recieves the last position
+    return m_count;
+}
+
+qreal ClipListModel::getCorrectPosForNewItem(qreal posMs, qreal duration, int requestedIndex)
+{
+    qreal lastFreePos = posMs;
+    if(requestedIndex >= m_count)//If inserting the last item
+    {
+        if(m_count>0)
+        {
+            return m_list[m_count-1]->endMs();
+        }
+        return lastFreePos;
+    }
+
+    for(int i = requestedIndex; i< m_count; i++)
+    {
+        auto currentItem = m_list[i];
+        auto newItemEnd = lastFreePos + duration;
+        auto currentEnd = currentItem->endMs();
+        if(lastFreePos < currentItem->m_pos && newItemEnd < currentEnd)//Find the item before which it will be placed
+        {
+            if (i - 1 >= 0)//If we are positioning not the first item
+            {
+                auto prevItem = m_list[i - 1];
+                if (prevItem->endMs() >= lastFreePos)//Sync with previous item
+                {
+                    lastFreePos = prevItem->endMs();
+                    continue;
+                }
+            }
+            else if(i < m_count)//Sync with next item (it will be i+1, but now it is at index 'i')
+            {
+                auto nextItem = m_list[i];
+                if (nextItem->m_pos < newItemEnd && nextItem->m_pos > lastFreePos)
+                {
+                    lastFreePos = nextItem->endMs();
+                    continue;
+                }
+            }
+            return lastFreePos;
+        }
+        else
+        {
+            lastFreePos = currentEnd;
+        }
+    }
+    //This should not be reached
+    qWarning() << "Couldn't find pos for item at pos " << posMs << " duration " << duration << " reqIndex " << requestedIndex;
+    return lastFreePos;
 }
 
 void ClipListModel::remove(int index)
 {
-    beginRemoveRows(QModelIndex(),index,m_count-1);
+    emit layoutAboutToBeChanged();
     m_list.removeAt(index);
     emit countChanged(--m_count);
     emit totalDurationMsChanged();
-    endRemoveRows();
+    emit layoutChanged();
 }
 
 void ClipListModel::swapItems(int leftIndex, int index)
@@ -115,6 +190,11 @@ int ClipListModel::reposition(int index, qreal newPos, ClipListModel *previewLis
 {
     auto leftIndex = index - 1;
     auto rightIndex = index + 1;
+    if (index < 0 || index >= m_count)
+    {
+        qWarning("Called reposition on item with index out of bounds");
+        return -1;
+    }
     ClipItemModel * thisItem = m_list[index];
     QList<ClipItemModel *>* preview = &previewList->m_list;
     if(leftIndex>0)
