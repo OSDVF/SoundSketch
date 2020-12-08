@@ -161,6 +161,7 @@ ApplicationWindow
             color: "white"
             anchors.left: parent.left
             onDel: player.deleteSelectedClip()
+            //onNote_position: buttonline.notes.note2.x = player.timeline.handle.x + player.pos_ms*player.timeline.scale_ms
         }
 
     }

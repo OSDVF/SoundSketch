@@ -5,25 +5,16 @@ import QtQuick.Layouts 1.11
 //import itu.project.backend 1.0
 
 Rectangle{
-    function add_note(offset_val)
-    {
-        var newObject = Qt.createQmlObject('import QtQuick 2.0; Text {color: "cornflowerblue"; x: offset_val ; y: 1000 ; width: 20; height: 20; text: text_for_notes.text }', notes,
-                                             "dynamicSnippet1");
-        items[note_index] = newObject
-        //items[note_index].text = text_for_notes.text;
-        for (var x = 0; x < note_index; x++){
-            items[x].y = (x*10+4) - 280 ;
-        }
-        note_index += 1
-    }
+
     signal play()
     signal del()
+   //signal note_position()
     id: control
     height: parent.height
     property double value: 0
     property double note_y_pos: -270
     property variant items: ["", "", "", "", ""]
-    property double note_index: 0
+    property double note_index: 1
 
 
 
@@ -175,8 +166,8 @@ Rectangle{
         placeholderText: qsTr("Enter notes")
         visible: false
         anchors.horizontalCenterOffset: 432
-        onEditingFinished:{ items[note_index].visible = true; text_for_notes.visible = false }
-        //Component.onCompleted: items[note_index] = items[note_index]
+        onEditingFinished:{text_for_notes.visible = false}
+
     }
     Button
     {
@@ -187,7 +178,7 @@ Rectangle{
           width: control.width * 0.6
           height: control.height * 0.4
           opacity: 1
-          signal note_position( var offset)
+
           background: Rectangle {
                       implicitWidth: 100
                       implicitHeight: 40
@@ -197,24 +188,158 @@ Rectangle{
                       radius: 10
 
                   }
+          Text {
+              id: note1
+              color: "white";
+              x: 0;
+              y: -column.height/1.5;
+              width: 20;
+              height: 20;
+              visible: true
+              text: text_for_notes.text
+          }
+          Text {
+              id: note2
+              color: "white";
+              x: 0;
+              y: -(column.height/1.5 - 15) ;
+              width: 20;
+              height: 20;
+              visible: true
+              text: text_for_notes.text
+          }
+          Text {
+              id: note3
+              color: "white";
+              x: 0
+              y: -(column.height/1.5 - 30) ;
+              width: 20;
+              height: 20;
+              visible: true
+              text: text_for_notes.text
+          }
+          Text {
+              id: note4
+              color: "white";
+              x: 0
+              y: -(column.height/1.5 - 45) ;
+              width: 20;
+              height: 20;
+              visible: true
+              text: text_for_notes.text
+          }
+          Text {
+              id: note5
+              color: "white";
+              x: 0
+              y: -(column.height/1.5 - 60);
+              width: 20;
+              height: 20;
+              visible: true
+              text: text_for_notes.text
+          }
+          Text {
+              id: note6
+              color: "white";
+              x: 0
+              y: -(column.height/1.5 - 75);
+              width: 20;
+              height: 20;
+              visible: true
+              text: text_for_notes.text
+          }
+          Text {
+              id: note7
+              color: "white";
+              x: 0
+              y: -(column.height/1.5 - 90);
+              width: 20;
+              height: 20;
+              visible: true
+              text: text_for_notes.text
+          }
+          Text {
+              id: note8
+              color: "white";
+              x: 0
+              y: -(column.height/1.5 - 105);
+              width: 20;
+              height: 20;
+              visible: true
+              text: text_for_notes.text
+          }
           onHoveredChanged:  hovered ? notes.opacity = 0.7 : notes.opacity = 1;
           onClicked: {
-//              if (note_index == 0){
-//                add_note(5);
-//                  note_index += 1
-//              }
+              //control.note_position();
               if(text_for_notes.visible == false)
               {
-                  add_note(5);
-                text_for_notes.visible = true
-                add_note(5);
-
+                  if (note_index == 0)
+                  {
+                      note1.text = text_for_notes.text
+                      text_for_notes.visible = true
+                      note1.visible = true
+                      note2.visible = false
+                      note3.visible = false
+                      note4.visible = false
+                      note5.visible = false
+                      note6.visible = false
+                      note7.visible = false
+                      note8.visible = false
+                  }
+                  else if (note_index == 1)
+                  {
+                      note1.text = text_for_notes.text
+                      text_for_notes.visible = true
+                      note2.visible = true
+                      note3.visible = false
+                      note4.visible = false
+                      note5.visible = false
+                      note6.visible = false
+                      note7.visible = false
+                      note8.visible = false
+                  }
+                  else if (note_index == 2)
+                  {
+                      note3.text = text_for_notes.text
+                      text_for_notes.visible = true
+                      note3.visible = true
+                  }
+                  else if (note_index == 3)
+                  {
+                      note4.text = text_for_notes.text
+                      text_for_notes.visible = true
+                      note4.visible = true
+                  }
+                  else if (note_index == 4)
+                  {
+                      note5.text = text_for_notes.text
+                      text_for_notes.visible = true
+                      note5.visible = true
+                  }
+                  else if (note_index == 5)
+                  {
+                      note6.text = text_for_notes.text
+                      text_for_notes.visible = true
+                      note6.visible = true
+                  }
+                  else if (note_index == 6)
+                  {
+                      note7.text = text_for_notes.text
+                      text_for_notes.visible = true
+                      note7.visible = true
+                  }
+                  else if (note_index == 7)
+                  {
+                      note8.text = text_for_notes.text
+                      text_for_notes.visible = true
+                      note8.visible = true
+                  }
+                  note_index++
               }
-//              else
-//              {
-//                  text_for_notes.visible = false
-//                  items[note_index].visible = true;
-//              }
+              else
+              {
+                  text_for_notes.visible = false
+              }
           }
     }
 }
