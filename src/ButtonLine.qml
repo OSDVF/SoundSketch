@@ -3,7 +3,6 @@ import QtQuick.Dialogs 1.3
 import QtQuick.Controls 2.0
 import QtQuick.Window 2.14
 import QtQuick.Layouts 1.11
-//import itu.project.backend 1.0
 
 Rectangle{
 
@@ -172,9 +171,18 @@ Rectangle{
                     placeholderText: qsTr("Enter note text")
                     Layout.fillHeight: true
                     Layout.fillWidth: true
+                    background: Rectangle {
+                                implicitWidth: 100
+                                implicitHeight: 40
+                                color: button.down ? "#d6d6d6" : "#BFE5D9"
+                                border.color: "gainsboro"
+                                border.width: 1
+                                radius: 10
+                    }
                 }
             }
         }
+
         standardButtons: Dialog.Ok | Dialog.Cancel
         onAccepted: {
             lastNoteText = text_for_notes.text
@@ -184,13 +192,16 @@ Rectangle{
         onRejected: {
             text_for_notes.text = lastNoteText = ""
         }
+
     }
     Button
     {
           id: notes
           x: button.width + jumpstart.width + play.width + jumpend.width + cut.width + del.width + (button.width)
           y: 0
-          text: "notes"
+          icon.width: del.width/3
+          icon.color: "transparent"
+          icon.source: "images/notes.jpg"
           width: control.width * 0.6
           height: control.height * 0.4
           opacity: 1
