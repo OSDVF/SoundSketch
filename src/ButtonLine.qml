@@ -171,13 +171,16 @@ Rectangle{
                     placeholderText: qsTr("Enter note text")
                     Layout.fillHeight: true
                     Layout.fillWidth: true
+                    onHoveredChanged: hovered ? (text_area.opacity = 1, text_area.border.color = "black") : (text_area.opacity = 0.6,  text_area.border.color= "gainsboro");
                     background: Rectangle {
+                        id: text_area
                                 implicitWidth: 100
                                 implicitHeight: 40
-                                color: button.down ? "#d6d6d6" : "#BFE5D9"
+                                color: "#9ad7c6"
+                                opacity: 0.6
                                 border.color: "gainsboro"
                                 border.width: 1
-                                radius: 10
+                                radius: 5
                     }
                 }
             }
