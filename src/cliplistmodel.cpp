@@ -186,6 +186,19 @@ void ClipListModel::clear()
     emit countChanged(m_count);
 }
 
+int ClipListModel::getIndexOfItemAtPos(qreal posMs)
+{
+    for(int i =0; i<m_count; i++)
+    {
+        auto item = m_list[i];
+        if(posMs >= item->m_pos && posMs <= item->endMs())
+        {
+            return i;
+        }
+    }
+    return -1;
+}
+
 int ClipListModel::reposition(int index, qreal newPos, ClipListModel *previewList, bool swapWithSiblings)
 {
     auto leftIndex = index - 1;

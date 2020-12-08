@@ -1,4 +1,5 @@
 import QtQuick 2.0
+import QtQuick.Dialogs 1.3
 import QtQuick.Controls 2.0
 import itu.project.backend 1.0
 
@@ -20,9 +21,26 @@ Rectangle
         //Set new clip properties
         clipList.append(pixelOffset / timeline.scale_ms + timeline.offset_ms, fileUrl)
     }
+
+    function addNoteAtHandlePos(text)
+    {
+        var index = clipList.getIndexOfItemAtPos(pos_ms);
+        if(index === -1)
+        {
+            nothingSelectedDialog.visible = true
+            return false;
+        }
+
+        var child = clipsFlickable.children[index];
+        child.children[0].addNote(pos_ms - clipList.get(index).posMs, text);
+        return true;
+    }
+
+
     function deleteSelectedClip()
     {
-        clipList.remove(selectedClipIndex);
+        if(clipList.count > 0)
+            clipList.remove(selectedClipIndex);
     }
 
     //Models
@@ -93,6 +111,7 @@ Rectangle
 
                 Flickable
                 {
+                    id: clipsFlickable
                     anchors.fill: parent
                     contentWidth: timeline.content_width
                     interactive: false
@@ -106,6 +125,7 @@ Rectangle
                         AudioClip {
                             audioFile: model.clipItemModel.audioFile
                             x: model.clipItemModel.posMs * timeline.scale_ms
+                            scaleMs: timeline.scale_ms
                             anchors.top: parent.top
                             anchors.bottom: parent.bottom
                             peaceTimeWidth: durationMs * timeline.scale_ms
@@ -175,5 +195,16 @@ Rectangle
             timeline.offset_ms = parseInt(value, 10);
             timeline.redraw();
         }
+    }
+
+    MessageDialog
+    {
+        id: nothingSelectedDialog
+        visible: false
+        title: qsTr("Select something")
+        text: qsTr("There is no audio clip at playhead position")
+        standardButtons: StandardButton.Close
+        icon: StandardIcon.Warning
+        modality: Qt.ApplicationModal
     }
 }

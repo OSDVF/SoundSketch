@@ -46,6 +46,7 @@ public:
     Q_INVOKABLE ClipListModel * copy();
     Q_INVOKABLE void copyTo(ClipListModel* list);
     Q_INVOKABLE void clear();
+    Q_INVOKABLE int getIndexOfItemAtPos(qreal pos);
 
     QHash<int, QByteArray> roleNames() const override
     {

@@ -1,4 +1,5 @@
 import QtQuick 2.0
+import QtQuick.Dialogs 1.3
 import QtQuick.Controls 2.0
 import QtQuick.Window 2.14
 import QtQuick.Layouts 1.11
@@ -8,15 +9,15 @@ Rectangle{
 
     signal play()
     signal del()
-   //signal note_position()
+    signal addNote(var noteText)
+    function restoreLastNote()
+    {
+        text_for_notes.text = lastNoteText
+    }
+
     id: control
     height: parent.height
-    property double value: 0
-    property double note_y_pos: -270
-    property variant items: ["", "", "", "", ""]
-    property double note_index: 1
-
-
+    property string lastNoteText: ""
 
     Button {
         id: button
@@ -75,7 +76,7 @@ Rectangle{
     {
           id: play
           x: button.width + jumpstart.width + (button.width/2)
-          onClicked: play()
+          onClicked: control.play()
           y: 0
           icon.color: "transparent"
           icon.source: "images/play.jpg"
@@ -153,21 +154,36 @@ Rectangle{
                       border.color: "gainsboro"
                       border.width: 1
                       radius: 10
-                  }
+          }
           onHoveredChanged:  hovered ? del.opacity = 0.7 : del.opacity = 1;
     }
-    TextField {
-        id: text_for_notes
-        x:0
-        y:-176
-        anchors.horizontalCenter: parent.horizontalCenter
-        width: 475
-        height: 119
-        placeholderText: qsTr("Enter notes")
-        visible: false
-        anchors.horizontalCenterOffset: 432
-        onEditingFinished:{text_for_notes.visible = false}
 
+    Dialog
+    {
+        id: notesDialog
+        visible: false
+        title: qsTr("Add note")
+        ColumnLayout {
+            width: parent ? parent.width : 100
+            RowLayout {
+                Layout.alignment: Qt.AlignHCenter
+                TextArea {
+                    id: text_for_notes
+                    placeholderText: qsTr("Enter note text")
+                    Layout.fillHeight: true
+                    Layout.fillWidth: true
+                }
+            }
+        }
+        standardButtons: Dialog.Ok | Dialog.Cancel
+        onAccepted: {
+            lastNoteText = text_for_notes.text
+            text_for_notes.text = ""
+            addNote(lastNoteText)
+        }
+        onRejected: {
+            text_for_notes.text = lastNoteText = ""
+        }
     }
     Button
     {
@@ -188,158 +204,9 @@ Rectangle{
                       radius: 10
 
                   }
-          Text {
-              id: note1
-              color: "white";
-              x: 0;
-              y: -column.height/1.5;
-              width: 20;
-              height: 20;
-              visible: true
-              text: text_for_notes.text
-          }
-          Text {
-              id: note2
-              color: "white";
-              x: 0;
-              y: -(column.height/1.5 - 15) ;
-              width: 20;
-              height: 20;
-              visible: true
-              text: text_for_notes.text
-          }
-          Text {
-              id: note3
-              color: "white";
-              x: 0
-              y: -(column.height/1.5 - 30) ;
-              width: 20;
-              height: 20;
-              visible: true
-              text: text_for_notes.text
-          }
-          Text {
-              id: note4
-              color: "white";
-              x: 0
-              y: -(column.height/1.5 - 45) ;
-              width: 20;
-              height: 20;
-              visible: true
-              text: text_for_notes.text
-          }
-          Text {
-              id: note5
-              color: "white";
-              x: 0
-              y: -(column.height/1.5 - 60);
-              width: 20;
-              height: 20;
-              visible: true
-              text: text_for_notes.text
-          }
-          Text {
-              id: note6
-              color: "white";
-              x: 0
-              y: -(column.height/1.5 - 75);
-              width: 20;
-              height: 20;
-              visible: true
-              text: text_for_notes.text
-          }
-          Text {
-              id: note7
-              color: "white";
-              x: 0
-              y: -(column.height/1.5 - 90);
-              width: 20;
-              height: 20;
-              visible: true
-              text: text_for_notes.text
-          }
-          Text {
-              id: note8
-              color: "white";
-              x: 0
-              y: -(column.height/1.5 - 105);
-              width: 20;
-              height: 20;
-              visible: true
-              text: text_for_notes.text
-          }
           onHoveredChanged:  hovered ? notes.opacity = 0.7 : notes.opacity = 1;
           onClicked: {
-              //control.note_position();
-              if(text_for_notes.visible == false)
-              {
-                  if (note_index == 0)
-                  {
-                      note1.text = text_for_notes.text
-                      text_for_notes.visible = true
-                      note1.visible = true
-                      note2.visible = false
-                      note3.visible = false
-                      note4.visible = false
-                      note5.visible = false
-                      note6.visible = false
-                      note7.visible = false
-                      note8.visible = false
-                  }
-                  else if (note_index == 1)
-                  {
-                      note1.text = text_for_notes.text
-                      text_for_notes.visible = true
-                      note2.visible = true
-                      note3.visible = false
-                      note4.visible = false
-                      note5.visible = false
-                      note6.visible = false
-                      note7.visible = false
-                      note8.visible = false
-                  }
-                  else if (note_index == 2)
-                  {
-                      note3.text = text_for_notes.text
-                      text_for_notes.visible = true
-                      note3.visible = true
-                  }
-                  else if (note_index == 3)
-                  {
-                      note4.text = text_for_notes.text
-                      text_for_notes.visible = true
-                      note4.visible = true
-                  }
-                  else if (note_index == 4)
-                  {
-                      note5.text = text_for_notes.text
-                      text_for_notes.visible = true
-                      note5.visible = true
-                  }
-                  else if (note_index == 5)
-                  {
-                      note6.text = text_for_notes.text
-                      text_for_notes.visible = true
-                      note6.visible = true
-                  }
-                  else if (note_index == 6)
-                  {
-                      note7.text = text_for_notes.text
-                      text_for_notes.visible = true
-                      note7.visible = true
-                  }
-                  else if (note_index == 7)
-                  {
-                      note8.text = text_for_notes.text
-                      text_for_notes.visible = true
-                      note8.visible = true
-                  }
-                  note_index++
-              }
-              else
-              {
-                  text_for_notes.visible = false
-              }
+              notesDialog.visible = true;
           }
     }
 }

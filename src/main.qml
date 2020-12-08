@@ -138,10 +138,10 @@ ApplicationWindow
         {
             id: formatDialog
             visible: false
-            title: qsTr("Nepodporovaný formát souboru.")
+            title: qsTr("Unsupported file foramt.")
             text:
             {
-                var mess = qsTr("Podporované formáty jsou: ")
+                var mess = qsTr("Supported formats are: ")
                 for (var i = 0; i < supportedExtensions.length - 1; i++)
                 {
                     mess += supportedExtensions[i] + ", "
@@ -161,7 +161,12 @@ ApplicationWindow
             color: "white"
             anchors.left: parent.left
             onDel: player.deleteSelectedClip()
-            //onNote_position: buttonline.notes.note2.x = player.timeline.handle.x + player.pos_ms*player.timeline.scale_ms
+            onAddNote: {
+                if(player.addNoteAtHandlePos(noteText) === false)
+                {
+                    buttonline.restoreLastNote()
+                }
+            }
         }
 
     }

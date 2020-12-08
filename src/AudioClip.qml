@@ -1,16 +1,19 @@
 import QtQuick 2.0
 import QtQuick.Layouts 1.15
 import itu.project.frontend 1.0
+import QtQml.Models 2.15
 
 Rectangle {
     id: mainRect
     property color backColor: "#E9E9E9"
     //width of the clip when there is no error
     property real peaceTimeWidth: implicitWidth
+    property real scaleMs: 0.04
     width: {
-        if(plot.hasException)
-            return errorText.paintedWidth + 20;
-        else return peaceTimeWidth;
+        if (plot.hasException)
+            return errorText.paintedWidth + 20
+        else
+            return peaceTimeWidth
     }
 
     property color waveColor: "#AAAAAA"
@@ -23,11 +26,26 @@ Rectangle {
     signal released(var mouse)
     signal mousePosChanged(var mouse)
 
-    border.color: Qt.lighter(backColor,1.2)
+    property color textBackColor: "#5c000000"
+    property real textRectRadius: 5
+
+    border.color: Qt.lighter(backColor, 1.2)
     border.width: 2
     radius: 10
 
     color: backColor
+
+    function addNote(pos, text) {
+        notesModel.append({
+                              "notePos": pos,
+                              "noteText": text
+                          })
+    }
+
+    ListModel {
+        id: notesModel
+    }
+
     WaveformPlot {
         id: plot
         anchors.fill: parent
@@ -35,8 +53,8 @@ Rectangle {
         peakColor: waveColor
         audioFile: mainRect.audioFile
         Rectangle {
-            color: "#5c000000"
-            radius: 5
+            color: textBackColor
+            radius: textRectRadius
             border.width: 0
             anchors.left: parent.left
             anchors.top: parent.top
@@ -71,7 +89,8 @@ Rectangle {
             onPositionChanged: mainRect.mousePosChanged(mouse)
             onPressAndHold: mainRect.alternativePress(mouse)
             onPressed: {
-                if(Qt.platform.os == "windows")//Do not do it on Android
+                if (Qt.platform.os == "windows")
+                    //Do not do it on Android
                     mainRect.alternativePress(mouse)
             }
             onReleased: {
@@ -79,6 +98,31 @@ Rectangle {
             }
         }
     }
+
+    Flickable {
+        anchors.fill: parent
+        anchors.bottomMargin: 5
+        anchors.topMargin: 5
+        interactive: false
+        Repeater {
+            model: notesModel
+
+            Rectangle {
+                x: notePos * scaleMs
+                y: index * (font.pixelSize + 10)
+                radius: textRectRadius
+                width: childrenRect.width + 10
+                height: childrenRect.height + 10
+                color: "#75e7e5ca"
+                Text {
+                    x: 5
+                    y: 5
+                    text: noteText
+                }
+            }
+        }
+    }
+
     Text {
         id: errorText
         color: "steelblue"
@@ -91,5 +135,3 @@ Rectangle {
         visible: plot.audioFile.hasException
     }
 }
-
-
