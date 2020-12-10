@@ -11,7 +11,7 @@ int main(int argc, char *argv[])
     QCoreApplication::setOrganizationName("ITU");
 
     QApplication app(argc, argv);
-
+    app.setWindowIcon(QIcon("src/images/ikona.ico"));
     QQmlApplicationEngine engine;
     const QUrl url(QStringLiteral("qrc:/main.qml"));
     QObject::connect(&engine, &QQmlApplicationEngine::objectCreated,
