@@ -34,7 +34,8 @@ Rectangle{
                 }
         icon.color: "transparent"
         icon.source: "images/record.jpg"
-        icon.width: button.width/3
+        icon.height: button.height
+        icon.width: icon.height
         onHoveredChanged:  hovered ? button.opacity = 0.7 : button.opacity = 1;
         onClicked: audiorecorder.visible = true
         Audiorecorder{
@@ -57,7 +58,8 @@ Rectangle{
           y: 0
           icon.color: "transparent"
           icon.source: "images/backward.jpg"
-          icon.width: jumpstart.width/3
+          icon.height: jumpstart.height
+          icon.width: icon.height
           width: control.width * 0.6
           height: control.height * 0.4
           background: Rectangle {
@@ -78,8 +80,9 @@ Rectangle{
           onClicked: control.play()
           y: 0
           icon.color: "transparent"
-          icon.source: "images/play.jpg"
-          icon.width: play.width/3
+          icon.source: "images/play.png"
+          icon.height: play.height
+          icon.width: icon.height
           width: control.width * 0.6
           height: control.height * 0.4
           background: Rectangle {
@@ -98,7 +101,8 @@ Rectangle{
           id: jumpend
           x: button.width + jumpstart.width + play.width + (button.width/2)
           y: 0
-          icon.width: jumpend.width/3
+          icon.height: jumpend.height
+          icon.width: icon.height
           icon.color: "transparent"
           icon.source: "images/forward.jpg"
           width: control.width * 0.6
@@ -119,7 +123,8 @@ Rectangle{
           id: cut
           x: button.width + jumpstart.width + play.width + jumpend.width + (button.width)
           y: 0
-          icon.width: cut.width/3
+          icon.height: cut.height
+          icon.width: icon.height
           icon.color: "transparent"
           icon.source: "images/cut.jpg"
           width: control.width * 0.6
@@ -141,7 +146,8 @@ Rectangle{
           x: button.width + jumpstart.width + play.width + jumpend.width + cut.width + (button.width)
           onClicked: control.del()
           y: 0
-          icon.width: del.width/3
+          icon.height: del.height
+          icon.width: icon.height
           icon.color: "transparent"
           icon.source: "images/del.jpg"
           width: control.width * 0.6
@@ -202,7 +208,8 @@ Rectangle{
           id: notes
           x: button.width + jumpstart.width + play.width + jumpend.width + cut.width + del.width + (button.width)
           y: 0
-          icon.width: del.width/3
+          icon.height: notes.height
+          icon.width: icon.height
           icon.color: "transparent"
           icon.source: "images/notes.jpg"
           width: control.width * 0.6
