@@ -16,5 +16,7 @@
         <file>images/play.jpg</file>
         <file>images/record.jpg</file>
         <file>images/notes.jpg</file>
+        <file>images/menu.png</file>
+        <file>images/return.jpg</file>
     </qresource>
 </RCC>

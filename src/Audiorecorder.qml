@@ -8,19 +8,14 @@ import QtQuick.Controls.Styles 1.4
 
 
 //AudiorecorderForm {
-Popup {
+Rectangle {
         id: audioRecorder
-        modal: true
-        focus: true
-        closePolicy: Popup.CloseOnEscape | Popup.CloseOnPressOutsideParent
-        background: Rectangle {
-                    implicitWidth: 100
-                    implicitHeight: 40
-                    color:  "white"
-                    border.color: "gainsboro"
-                    border.width: 1
-                    radius: 4
-                }
+        width: 350
+        height: 300
+        color:  "white"
+        border.color: "gainsboro"
+        border.width: 1
+        radius: 4
         property double startTime: 0
 
         Label {
@@ -37,11 +32,11 @@ Popup {
             y: 81
             width: 134
             height: 40
-            onHoveredChanged:  hovered ? audioDeviceBox.opacity = 0.7 : audioDeviceBox.opacity = 1;
+            //onHoveredChanged:  hovered ? audioDeviceBox.color = "#d6d6d6" : audioDeviceBox.color = "#BFE5D9";
             background: Rectangle {
                         implicitWidth: 100
                         implicitHeight: 40
-                        color: button.down ? "#d6d6d6" : "#BFE5D9"
+                        //color: button.down ? "#d6d6d6" : "#BFE5D9"
                         border.color: "gainsboro"
                         border.width: 1
                         radius: 4
@@ -63,7 +58,7 @@ Popup {
             x: audioRecorder.width/2 - outputButton.width
             y: 160
             text: qsTr("Save recording")
-            onHoveredChanged:  hovered ? outputButton.opacity = 0.7 : outputButton.opacity = 1;
+            //onHoveredChanged:  hovered ? outputButton.opacity = 0.7 : outputButton.opacity = 1;
             onClicked: saveDialog.open()
             background: Rectangle {
                         implicitWidth: 100
@@ -124,7 +119,7 @@ Popup {
             visible: true
             text: qsTr("Record")
             clip: false
-            onHoveredChanged:  hovered ? recordButton.opacity = 0.7 : recordButton.opacity = 1;
+            //onHoveredChanged:  hovered ? recordButton.opacity = 0.7 : recordButton.opacity = 1;
             onClicked: {
                 if(timer.running == false)
                 {
@@ -176,7 +171,7 @@ Popup {
                 time.text = ""
                 audiorecorder.visible = false
             }
-            onHoveredChanged:  hovered ? close.opacity = 0.7 : close.opacity = 1;
+            //onHoveredChanged:  hovered ? close.opacity = 0.7 : close.opacity = 1;
             background: Rectangle {
                         implicitWidth: 100
                         implicitHeight: 40

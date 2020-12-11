@@ -20,8 +20,8 @@ Rectangle{
 
     Button {
         id: button
-        width: control.width*0.7
-        height: control.height * 0.4
+        width: control.width*0.6
+        height: control.height * 0.3
         x:0
         y: 0
         background: Rectangle {
@@ -34,15 +34,15 @@ Rectangle{
                 }
         icon.color: "transparent"
         icon.source: "images/record.jpg"
-        icon.width: button.width/3
-        onHoveredChanged:  hovered ? button.opacity = 0.7 : button.opacity = 1;
+        icon.width: button.width
+        icon.height: icon.width
+        //onHoveredChanged:  hovered ? button.opacity = 0.7 : button.opacity = 1;
         onClicked: audiorecorder.visible = true
         Audiorecorder{
             id: audiorecorder
-            x: column.width/4
-            y:-365
-            width: column.width/2
-            height: 300
+            opacity: 1
+            x: (mainWindow.width - audiorecorder.width)/8
+            y: -mainWindow.height + player.height/2
             visible: false;
         }
 
@@ -53,17 +53,18 @@ Rectangle{
     Button
     {
           id: jumpstart
-          x: button.width + (button.width/2)
+          x: mainWindow.width / 2 - (jumpstart.width*1.75)
           y: 0
           icon.color: "transparent"
           icon.source: "images/backward.jpg"
-          icon.width: jumpstart.width/3
-          width: control.width * 0.6
-          height: control.height * 0.4
+          icon.width: jumpstart.width
+          icon.height: icon.width
+          width: control.width
+          height: control.height * 0.3
           background: Rectangle {
                       implicitWidth: 100
                       implicitHeight: 40
-                      color: button.down ? "#d6d6d6" : "#BFE5D9"
+                      color: jumpstart.down ? "#d6d6d6" : "#BFE5D9"
                       border.color: "gainsboro"
                       border.width: 1
                       radius: 10
@@ -74,18 +75,19 @@ Rectangle{
     Button
     {
           id: play
-          x: button.width + jumpstart.width + (button.width/2)
+          x: jumpstart.x + jumpstart.width
           onClicked: control.play()
           y: 0
           icon.color: "transparent"
           icon.source: "images/play.jpg"
-          icon.width: play.width/3
-          width: control.width * 0.6
-          height: control.height * 0.4
+          icon.width: play.width
+          icon.height: icon.width
+          width: control.width
+          height: control.height * 0.3
           background: Rectangle {
                       implicitWidth: 100
                       implicitHeight: 40
-                      color: button.down ? "#d6d6d6" : "#BFE5D9"
+                      color: play.down ? "#d6d6d6" : "#BFE5D9"
                       border.color: "gainsboro"
                       border.width: 1
                       radius: 10
@@ -96,17 +98,18 @@ Rectangle{
     Button
     {
           id: jumpend
-          x: button.width + jumpstart.width + play.width + (button.width/2)
+          x: play.x + play.width
           y: 0
-          icon.width: jumpend.width/3
+          icon.width: jumpend.width
+          icon.height: icon.width
           icon.color: "transparent"
           icon.source: "images/forward.jpg"
-          width: control.width * 0.6
-          height: control.height * 0.4
+          width: control.width
+          height: control.height * 0.3
           background: Rectangle {
                       implicitWidth: 100
                       implicitHeight: 40
-                      color: button.down ? "#d6d6d6" : "#BFE5D9"
+                      color: jumpend.down ? "#d6d6d6" : "#BFE5D9"
                       border.color: "gainsboro"
                       border.width: 1
                       radius: 10
@@ -117,13 +120,15 @@ Rectangle{
     Button
     {
           id: cut
-          x: button.width + jumpstart.width + play.width + jumpend.width + (button.width)
-          y: 0
-          icon.width: cut.width/3
+          x: mainWindow.width - del.width - cut.width*1
+          y: - mainWindow.height + buttonline.height - cut.height*1.5
+          //y: - 300
+          icon.width: cut.width
+          icon.height: icon.width
           icon.color: "transparent"
           icon.source: "images/cut.jpg"
           width: control.width * 0.6
-          height: control.height * 0.4
+          height: control.height * 0.3
           background: Rectangle {
                       implicitWidth: 100
                       implicitHeight: 40
@@ -138,14 +143,15 @@ Rectangle{
     Button
     {
           id: del
-          x: button.width + jumpstart.width + play.width + jumpend.width + cut.width + (button.width)
+          x: mainWindow.width - del.width - cut.width*2.2
           onClicked: control.del()
-          y: 0
-          icon.width: del.width/3
+          y: - mainWindow.height + buttonline.height - del.height*1.5
+          icon.width: del.width
+          icon.height: icon.width
           icon.color: "transparent"
           icon.source: "images/del.jpg"
           width: control.width * 0.6
-          height: control.height * 0.4
+          height: control.height * 0.3
           background: Rectangle {
                       implicitWidth: 100
                       implicitHeight: 40
@@ -200,13 +206,14 @@ Rectangle{
     Button
     {
           id: notes
-          x: button.width + jumpstart.width + play.width + jumpend.width + cut.width + del.width + (button.width)
+          x: mainWindow.width - notes.width*2
           y: 0
-          icon.width: del.width/3
+          icon.width: notes.width
+          icon.height: icon.width
           icon.color: "transparent"
           icon.source: "images/notes.jpg"
           width: control.width * 0.6
-          height: control.height * 0.4
+          height: control.height * 0.3
           opacity: 1
 
           background: Rectangle {

@@ -4,82 +4,260 @@ import QtQml.Models 2.15
 import QtQuick.Dialogs 1.3
 import QtQuick.Layouts 1.3
 import QtQuick.Controls 2.4
-//import Qt.labs.platform 1.1
+import QtQuick.Controls.Styles 1.4
 import itu.project.backend 1.0
 
 ApplicationWindow
 {
     id: mainWindow
-    width: 1000
-    height: 480
+    width: 400
+    height: 700
     visible: true
     title: qsTr("Hello World")
 
-    menuBar: MenuBar {
-        background: Rectangle {
-                    implicitWidth: 100
-                    implicitHeight: 40
-                    color: "#BFE5D9"
-                    border.color: "gainsboro"
-                    border.width: 1
-                    radius: 5
-                }
-        FileDialog {
-            id: saveDialog
-            title: "Save Dialog"
-            selectMultiple : false
-            selectExisting: false
+
+    FileDialog {
+        id: saveDialog
+        title: "Save Dialog"
+        selectMultiple : false
+        selectExisting: false
+    }
+    Dialog {
+        id: dialog
+        x: mainWindow.width / 2 - dialog.width/2
+        y: mainWindow.height / 2 - dialog.height/2
+        title: "Title"
+        standardButtons: Dialog.Ok
+        visible: false
+        Text {
+            //id: name
+            text: qsTr("You successfully created a new project!")
         }
-        Menu {
-
-            title: qsTr("Project")
-            Action { text: qsTr("New...") }
-            Action { text: qsTr("Open..."); onTriggered: importDialog.open()}
-            Action { text: qsTr("Save...");onTriggered: saveDialog.open() }
-            MenuSeparator { }
-            Action { text: qsTr("Quit"); onTriggered: Qt.quit() }
-        }
-        Menu {
-            title: qsTr("Edit")
-            Action
-            {
-                text: qsTr("Import Audio")
-                onTriggered: importDialog.open()
-            }
-            Action { text: qsTr("Cut") }
-            Action { text: qsTr("Copy") }
-            Action { text: qsTr("Paste") }
-        }
-
-        Menu {
-            title: qsTr("Help")
-            Action { text: qsTr("About") ; onTriggered: about_text.visible = true}
-        }
-        delegate: MenuBarItem {
-                id: menuBarItem
-
-                contentItem: Text {
-                    text: menuBarItem.text
-                    font: menuBarItem.font
-                    opacity: enabled ? 1.0 : 0.3
-
-                    color: menuBarItem.highlighted ? "dimgray" : "black"
-                    horizontalAlignment: Text.AlignLeft
-                    verticalAlignment: Text.AlignVCenter
-                    elide: Text.ElideRight
-                }
-
-                background: Rectangle {
-                    implicitWidth: 40
-                    implicitHeight: 40
-                    opacity: enabled ? 1 : 0.3
-                    color: "#BFE5D9"
-                    border.color: "gainsboro"
-                    radius: 10
-                }
-            }
+        onAccepted: console.log("Ok clicked")
     }
 
+    Drawer{
+        id: menu
+        width: mainWindow.width * 0.3
+        height: mainWindow.height
+        Rectangle{
+            id: mainmenu
+            width: menu.width
+            height: menu.height
+            Button{
+                id: project
+                y: 0
+                width: menu.width
+                height: 70
+                text: "Project"
+                font.family: "Tahoma"
+                font.pointSize: 10
+                onClicked: projectmenu.visible = true
+                background: Rectangle {
+                    color: "#BFE5D9"
+                    border.color: "gainsboro"
+                    radius: 7
+                }
+            }
+            Button{
+                id: edit
+                width: menu.width
+                height: 70
+                y: project.height
+                text: "Edit"
+                font.family: "Tahoma"
+                font.pointSize: 10
+                onClicked: editmenu.visible = true
+                background: Rectangle {
+                    color: "#BFE5D9"
+                    border.color: "gainsboro"
+                    radius: 7
+                }
+            }
+            Button{
+                id: help
+                width: menu.width
+                height: 70
+                y: project.height + edit.height
+                text: "Help"
+                font.family: "Tahoma"
+                font.pointSize: 10
+                onClicked: helpmenu.visible = true
+                background: Rectangle {
+                    color: "#BFE5D9"
+                    border.color: "gainsboro"
+                    radius: 7
+                }
+            }
+        }
+        Rectangle{
+            id: projectmenu
+            width: menu.width
+            height: menu.height
+            visible: false
+            Button{
+                id: newproject
+                y: 0
+                width: menu.width
+                height: 70
+                text: "New project"
+                font.family: "Tahoma"
+                font.pointSize: 10
+                background: Rectangle {
+                    color: "#BFE5D9"
+                    border.color: "gainsboro"
+                    radius: 7
+                }
+                onClicked: dialog.visible = true
+            }
+            Button{
+                id: openproject
+                y: newproject.height
+                width: menu.width
+                height: 70
+                text: "Open"
+                font.family: "Tahoma"
+                font.pointSize: 10
+                onClicked: importDialog.open()
+                background: Rectangle {
+                    color: "#BFE5D9"
+                    border.color: "gainsboro"
+                    radius: 7
+                }
+            }
+            Button{
+                id: saveproject
+                y: newproject.height + openproject.height
+                width: menu.width
+                height: 70
+                text: "Save"
+                font.family: "Tahoma"
+                font.pointSize: 10
+                onClicked: saveDialog.open()
+                background: Rectangle {
+                    color: "#BFE5D9"
+                    border.color: "gainsboro"
+                    radius: 7
+                }
+            }
+            Button{
+                id: quit
+                y: newproject.height + openproject.height + saveproject.height
+                width: menu.width
+                height: 70
+                text: "Quit"
+                font.family: "Tahoma"
+                font.pointSize: 10
+                onClicked: Qt.quit()
+                background: Rectangle {
+                    color: "#BFE5D9"
+                    border.color: "gainsboro"
+                    radius: 7
+                }
+            }
+        }
+        Rectangle{
+            id: editmenu
+            width: menu.width
+            height: menu.height
+            visible: false
+            Button{
+                id: importaudio
+                y: 0
+                width: menu.width
+                height: 70
+                text: "Import audio"
+                font.family: "Tahoma"
+                font.pointSize: 10
+                onClicked: importDialog.open()
+                background: Rectangle {
+                    color: "#BFE5D9"
+                    border.color: "gainsboro"
+                    radius: 7
+                }
+            }
+            Button{
+                id: cut
+                y: importaudio.height
+                width: menu.width
+                height: 70
+                text: "Cut"
+                font.family: "Tahoma"
+                font.pointSize: 10
+                background: Rectangle {
+                    color: "#BFE5D9"
+                    border.color: "gainsboro"
+                    radius: 7
+                }
+            }
+            Button{
+                id: copy
+                y: importaudio.height + cut.height
+                width: menu.width
+                height: 70
+                text: "Copy"
+                font.family: "Tahoma"
+                font.pointSize: 10
+                background: Rectangle {
+                    color: "#BFE5D9"
+                    border.color: "gainsboro"
+                    radius: 7
+                }
+            }
+            Button{
+                id: paste
+                y: importaudio.height + cut.height + copy.height
+                width: menu.width
+                height: 70
+                text: "Paste"
+                font.family: "Tahoma"
+                font.pointSize: 10
+                background: Rectangle {
+                    color: "#BFE5D9"
+                    border.color: "gainsboro"
+                    radius: 7
+                }
+            }
+        }
+        Rectangle{
+            id: helpmenu
+            width: menu.width
+            height: menu.height
+            visible: false
+            Button{
+                id: about
+                width: menu.width
+                height: 70
+                text: "About"
+                font.family: "Tahoma"
+                font.pointSize: 10
+                onClicked: {about_text.visible = true; menu.visible = false}
+                background: Rectangle {
+                    color: "#BFE5D9"
+                    border.color: "gainsboro"
+                    radius: 7
+                }
+            }
+        }
+
+        Button{
+            y: menu.height - 50
+            x: menu.width - 50
+            width: 50
+            height: 50
+            icon.source: "images/return.jpg"
+            onClicked: {
+                helpmenu.visible = false;
+                editmenu.visible = false;
+                projectmenu.visible = false;
+            }
+            background: Rectangle {
+                color: "#BFE5D9"
+                border.color: "gainsboro"
+                radius: 7
+            }
+        }
+    }
 
     function basename(fileName)
     {
@@ -114,7 +292,28 @@ ApplicationWindow
       anchors.margins: 20
       anchors.bottomMargin: 28
       anchors.rightMargin: 26
-
+      Rectangle{
+          width: mainWindow.width
+          height: mainWindow.height * 0.1
+      Button{
+          id: opendrawer
+          x: 0
+          y: 0
+          height: 40
+          width: 40
+          icon.color: "transparent"
+          icon.source: "images/menu.png"
+          onClicked: menu.visible = true
+          background: Rectangle {
+               implicitWidth: 40
+               implicitHeight: 40
+               opacity: enabled ? 1 : 0.3
+               color: "#BFE5D9"
+               border.color: "gainsboro"
+               radius: 10
+          }
+      }
+      }
         Player
         {
             id: player
@@ -172,10 +371,10 @@ ApplicationWindow
     }
     Rectangle{
         id:about_text
-        x: mainWindow.width/4
-        y: 20
-        width:450
-        height: 400
+        x: 0
+        y: 100
+        width:mainWindow.width
+        height: mainWindow.height/2 + 30
         color: "#BFE5D9"
         visible: false
         border.color: "gainsboro"
