@@ -9,6 +9,8 @@ Rectangle{
 
     signal play()
     signal del()
+    signal jumpend()
+    signal jumpbeg()
     signal addNote(var noteText)
     function restoreLastNote()
     {
@@ -67,6 +69,7 @@ Rectangle{
                       radius: 10
                   }
           onHoveredChanged:  hovered ? jumpstart.opacity = 0.7 : jumpstart.opacity = 1;
+          onClicked: control.jumpbeg()
     }
 
     Button
@@ -119,6 +122,7 @@ Rectangle{
                       radius: 10
                   }
           onHoveredChanged:  hovered ? jumpend.opacity = 0.7 : jumpend.opacity = 1;
+          onClicked: control.jumpend()
     }
 
     Button

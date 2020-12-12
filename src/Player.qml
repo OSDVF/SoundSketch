@@ -99,6 +99,16 @@ Rectangle
         player_backend.play(clipList.get(index).audioFile, pos_ms - player_backend.audio_pos_from_start);
     }
 
+    function jumpbeg()
+    {
+        time_offset_slider.value = 0;
+    }
+
+    function jumpend()
+    {
+        time_offset_slider.value = time_offset_slider.to;
+    }
+
     Timer
     {
         id: timer
