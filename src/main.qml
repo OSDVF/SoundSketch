@@ -62,9 +62,13 @@ ApplicationWindow
                 text: "Project"
                 font.family: "Tahoma"
                 font.pointSize: 10
-                onClicked: projectmenu.visible = true
+                onClicked: {
+                    projectmenu.visible = true;
+                }
                 background: Rectangle {
+                    id: projectstyle
                     color: "#BFE5D9"
+                    opacity: project.pressed? 0.7 : 1
                     border.color: "gainsboro"
                     radius: 7
                 }
@@ -77,9 +81,13 @@ ApplicationWindow
                 text: "Edit"
                 font.family: "Tahoma"
                 font.pointSize: 10
-                onClicked: editmenu.visible = true
+                onClicked: {
+                    editmenu.visible = true;
+                }
                 background: Rectangle {
+                    id: editstyle
                     color: "#BFE5D9"
+                    opacity: edit.pressed? 0.7 : 1
                     border.color: "gainsboro"
                     radius: 7
                 }
@@ -92,9 +100,13 @@ ApplicationWindow
                 text: "Help"
                 font.family: "Tahoma"
                 font.pointSize: 10
-                onClicked: helpmenu.visible = true
+                onClicked: {
+                    helpmenu.visible = true;
+                }
                 background: Rectangle {
+                    id: helpstyle
                     color: "#BFE5D9"
+                    opacity: help.pressed? 0.7 : 1
                     border.color: "gainsboro"
                     radius: 7
                 }
@@ -114,11 +126,15 @@ ApplicationWindow
                 font.family: "Tahoma"
                 font.pointSize: 10
                 background: Rectangle {
+                    id: newstyle
                     color: "#BFE5D9"
+                    opacity: newproject.pressed? 0.7 : 1
                     border.color: "gainsboro"
                     radius: 7
                 }
-                onClicked: player.deleteAllClips()
+                onClicked: {
+                    player.deleteAllClips();
+                }
             }
             Button{
                 id: openproject
@@ -128,9 +144,13 @@ ApplicationWindow
                 text: "Open"
                 font.family: "Tahoma"
                 font.pointSize: 10
-                onClicked: importDialog.open()
+                onClicked: {
+                    importDialog.open();
+                }
                 background: Rectangle {
+                    id: openstyle
                     color: "#BFE5D9"
+                    opacity: openproject.pressed? 0.7 : 1
                     border.color: "gainsboro"
                     radius: 7
                 }
@@ -143,9 +163,13 @@ ApplicationWindow
                 text: "Save"
                 font.family: "Tahoma"
                 font.pointSize: 10
-                onClicked: dialog.visible = true
+                onClicked: {
+                    dialog.visible = true;
+                }
                 background: Rectangle {
+                    id: savestyle
                     color: "#BFE5D9"
+                    opacity: saveproject.pressed? 0.7 : 1
                     border.color: "gainsboro"
                     radius: 7
                 }
@@ -158,9 +182,13 @@ ApplicationWindow
                 text: "Quit"
                 font.family: "Tahoma"
                 font.pointSize: 10
-                onClicked: Qt.quit()
+                onClicked: {
+                    Qt.quit();
+                }
                 background: Rectangle {
+                    id: quitstyle
                     color: "#BFE5D9"
+                    opacity: quit.pressed? 0.7 : 1
                     border.color: "gainsboro"
                     radius: 7
                 }
@@ -179,9 +207,13 @@ ApplicationWindow
                 text: "Import audio"
                 font.family: "Tahoma"
                 font.pointSize: 10
-                onClicked: importDialog.open()
+                onClicked: {
+                    importDialog.open();
+                }
                 background: Rectangle {
+                    id: importstyle
                     color: "#BFE5D9"
+                    opacity: importaudio.pressed? 0.7 : 1
                     border.color: "gainsboro"
                     radius: 7
                 }
@@ -198,9 +230,10 @@ ApplicationWindow
                     copiedUrl = player.getSelectedClipUrl();
                     player.deleteSelectedClip();
                 }
-
                 background: Rectangle {
+                    id: cutstyle
                     color: "#BFE5D9"
+                    opacity: cut.pressed? 0.7 : 1
                     border.color: "gainsboro"
                     radius: 7
                 }
@@ -217,7 +250,9 @@ ApplicationWindow
                     copiedUrl = player.getSelectedClipUrl();
                 }
                 background: Rectangle {
+                    id: copystyle
                     color: "#BFE5D9"
+                    opacity: copy.pressed? 0.7 : 1
                     border.color: "gainsboro"
                     radius: 7
                 }
@@ -234,7 +269,9 @@ ApplicationWindow
                     importAudio(copiedUrl, 0);
                 }
                 background: Rectangle {
+                    id: pastestyle
                     color: "#BFE5D9"
+                    opacity: paste.pressed? 0.7 : 1
                     border.color: "gainsboro"
                     radius: 7
                 }
@@ -252,9 +289,14 @@ ApplicationWindow
                 text: "About"
                 font.family: "Tahoma"
                 font.pointSize: 10
-                onClicked: {about_text.visible = true; menu.visible = false}
+                onClicked: {
+                    about_text.visible = true;
+                    menu.visible = false;
+                }
                 background: Rectangle {
+                    id: aboutstyle
                     color: "#BFE5D9"
+                    opacity: about.pressed? 0.7 : 1
                     border.color: "gainsboro"
                     radius: 7
                 }
@@ -262,6 +304,7 @@ ApplicationWindow
         }
 
         Button{
+            id: returnbutton
             y: menu.height - 50
             x: menu.width - 50
             width: 50
@@ -273,7 +316,9 @@ ApplicationWindow
                 projectmenu.visible = false;
             }
             background: Rectangle {
-                color: "#BFE5D9"
+                id: returnstyle
+                color:  "#BFE5D9"
+                opacity: returnbutton.pressed? 0.7 : 1
                 border.color: "gainsboro"
                 radius: 7
             }
