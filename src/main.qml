@@ -55,29 +55,33 @@ ApplicationWindow
         id: menu
         width: mainWindow.width * 0.3
         height: mainWindow.height
+        Button{
+            id: returnbutton
+            y: 0
+            x: 0
+            width: menu.width
+            height: 40
+            icon.source: "images/return.jpg"
+            visible: true
+            onClicked: {
+                helpmenu.visible = false;
+                editmenu.visible = false;
+                projectmenu.visible = false;
+            }
+            background: Rectangle {
+                id: returnstyle
+                color:  "#BFE5D9"
+                opacity: returnbutton.pressed? 0.7 : 1
+                border.color: "gainsboro"
+                radius: 7
+            }
+        }
         Rectangle{
             id: mainmenu
+            y: 40
             width: menu.width
             height: menu.height
-            Button{
-                id: returnbutton
-                y: 0
-                width: menu.width
-                height: 40
-                icon.source: "images/return.jpg"
-                onClicked: {
-                    helpmenu.visible = false;
-                    editmenu.visible = false;
-                    projectmenu.visible = false;
-                }
-                background: Rectangle {
-                    id: returnstyle
-                    color:  "#BFE5D9"
-                    opacity: returnbutton.pressed? 0.7 : 1
-                    border.color: "gainsboro"
-                    radius: 7
-                }
-            }
+
             Button{
                 id: project
                 y: 0
@@ -101,7 +105,7 @@ ApplicationWindow
                 id: edit
                 width: menu.width
                 height: 70
-                y: project.height
+                y: project.y + project.height
                 text: "Edit"
                 font.family: "Tahoma"
                 font.pointSize: 10
@@ -120,7 +124,7 @@ ApplicationWindow
                 id: help
                 width: menu.width
                 height: 70
-                y: project.height + edit.height
+                y: edit.y + edit.height
                 text: "Help"
                 font.family: "Tahoma"
                 font.pointSize: 10
@@ -138,6 +142,7 @@ ApplicationWindow
         }
         Rectangle{
             id: projectmenu
+            y: 40
             width: menu.width
             height: menu.height
             visible: false
@@ -162,7 +167,7 @@ ApplicationWindow
             }
             Button{
                 id: openproject
-                y: newproject.height
+                y: newproject.y + newproject.height
                 width: menu.width
                 height: 70
                 text: "Open"
@@ -181,7 +186,7 @@ ApplicationWindow
             }
             Button{
                 id: saveproject
-                y: newproject.height + openproject.height
+                y: openproject.y + openproject.height
                 width: menu.width
                 height: 70
                 text: "Save"
@@ -200,7 +205,7 @@ ApplicationWindow
             }
             Button{
                 id: quit
-                y: newproject.height + openproject.height + saveproject.height
+                y: saveproject.y + saveproject.height
                 width: menu.width
                 height: 70
                 text: "Quit"
@@ -220,6 +225,7 @@ ApplicationWindow
         }
         Rectangle{
             id: editmenu
+            y: 40
             width: menu.width
             height: menu.height
             visible: false
@@ -244,7 +250,7 @@ ApplicationWindow
             }
             Button{
                 id: cut
-                y: importaudio.height
+                y: importaudio.y + importaudio.height
                 width: menu.width
                 height: 70
                 text: "Cut"
@@ -264,7 +270,7 @@ ApplicationWindow
             }
             Button{
                 id: copy
-                y: importaudio.height + cut.height
+                y: cut.y + cut.height
                 width: menu.width
                 height: 70
                 text: "Copy"
@@ -283,7 +289,7 @@ ApplicationWindow
             }
             Button{
                 id: paste
-                y: importaudio.height + cut.height + copy.height
+                y: copy.y + copy.height
                 width: menu.width
                 height: 70
                 text: "Paste"
@@ -303,11 +309,13 @@ ApplicationWindow
         }
         Rectangle{
             id: helpmenu
+            y: 40
             width: menu.width
             height: menu.height
             visible: false
             Button{
                 id: about
+                y: 0
                 width: menu.width
                 height: 70
                 text: "About"
