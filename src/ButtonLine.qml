@@ -7,6 +7,8 @@ import QtQuick.Layouts 1.11
 Rectangle{
 
     signal play()
+    signal jumpend()
+    signal jumpbeg()
     signal del()
     signal addNote(var noteText)
     property int num: 0
@@ -72,6 +74,7 @@ Rectangle{
                       radius: 10
                   }
           onHoveredChanged:  hovered ? jumpstart.opacity = 0.7 : jumpstart.opacity = 1;
+          onClicked: control.jumpbeg()
     }
 
     Button
@@ -128,6 +131,7 @@ Rectangle{
                       radius: 10
                   }
           onHoveredChanged:  hovered ? jumpend.opacity = 0.7 : jumpend.opacity = 1;
+          onClicked: control.jumpend()
     }
 
     Button

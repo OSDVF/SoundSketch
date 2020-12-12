@@ -99,6 +99,24 @@ Rectangle
         player_backend.play(clipList.get(index).audioFile, pos_ms - player_backend.audio_pos_from_start);
     }
 
+
+
+    function jumpbeg()
+    {
+        timeline.handle.x = 5;
+        handleline.x = 15;
+        timeline.redraw();
+        time_offset_slider.value = 0;
+    }
+
+    function jumpend()
+    {
+        time_offset_slider.value = time_offset_slider.to;
+        timeline.handle.x = timeline.width - 30;
+        handleline.x = timeline.width - 20;
+        timeline.redraw();
+    }
+
     Timer
     {
         id: timer
@@ -329,6 +347,7 @@ Rectangle
 
     Rectangle
     {
+        id: handleline
         x: timeline.content_x + timeline.content_width * timeline.value
         y: 0
         width: 1
