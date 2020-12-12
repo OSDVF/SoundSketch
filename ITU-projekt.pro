@@ -43,6 +43,8 @@ HEADERS += \
     src/WaveformGenerator.h \
     src/audiofile.h \
     src/audiolvel.h \
+    src/clipitemmodel.h \
+    src/cliplistmodel.h \
     src/player.h \
     src/waveformplot.h
 
