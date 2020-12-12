@@ -15,6 +15,7 @@ ApplicationWindow
     visible: true
     title: qsTr("Hello World")
 
+    property string copiedUrl: ""
 
     FileDialog {
         id: saveDialog
@@ -193,6 +194,11 @@ ApplicationWindow
                 text: "Cut"
                 font.family: "Tahoma"
                 font.pointSize: 10
+                onClicked: {
+                    copiedUrl = player.getSelectedClipUrl();
+                    player.deleteSelectedClip();
+                }
+
                 background: Rectangle {
                     color: "#BFE5D9"
                     border.color: "gainsboro"
@@ -207,6 +213,9 @@ ApplicationWindow
                 text: "Copy"
                 font.family: "Tahoma"
                 font.pointSize: 10
+                onClicked: {
+                    copiedUrl = player.getSelectedClipUrl();
+                }
                 background: Rectangle {
                     color: "#BFE5D9"
                     border.color: "gainsboro"
@@ -221,6 +230,9 @@ ApplicationWindow
                 text: "Paste"
                 font.family: "Tahoma"
                 font.pointSize: 10
+                onClicked: {
+                    importAudio(copiedUrl, 0);
+                }
                 background: Rectangle {
                     color: "#BFE5D9"
                     border.color: "gainsboro"

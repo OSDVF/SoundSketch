@@ -53,6 +53,7 @@ Rectangle
            return clipList.get(selectedClipIndex).audioFile.fileUrl;
     }
 
+
     //Models
     ClipListModel {
         id: clipList
