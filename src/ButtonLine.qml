@@ -1,6 +1,7 @@
 import QtQuick 2.0
 import QtQuick.Dialogs 1.3
 import QtQuick.Controls 2.0
+import QtQuick.Controls.Styles 1.4
 import QtQuick.Window 2.14
 import QtQuick.Layouts 1.11
 
@@ -27,16 +28,15 @@ Rectangle{
         background: Rectangle {
                     implicitWidth: 100
                     implicitHeight: 40
-                    color: button.down ? "#d6d6d6" : "#BFE5D9"
+                    color: "#BFE5D9"
                     border.color: "gainsboro"
                     border.width: 1
                     radius: 10
                 }
         icon.color: "transparent"
         icon.source: "images/record.jpg"
-        icon.width: button.width
-        icon.height: icon.width
         onClicked: audiorecorder.visible = true
+        onHoveredChanged:  hovered ? opacity = 0.7 : opacity = 1;
         Audiorecorder{
             id: audiorecorder
             opacity: 1
@@ -56,14 +56,12 @@ Rectangle{
           y: 0
           icon.color: "transparent"
           icon.source: "images/backward.jpg"
-          icon.width: jumpstart.width
-          icon.height: icon.width
           width: control.width
           height: control.height * 0.3
           background: Rectangle {
                       implicitWidth: 100
                       implicitHeight: 40
-                      color: jumpstart.down ? "#d6d6d6" : "#BFE5D9"
+                      color: "#BFE5D9"
                       border.color: "gainsboro"
                       border.width: 1
                       radius: 10
@@ -79,14 +77,12 @@ Rectangle{
           y: 0
           icon.color: "transparent"
           icon.source: "images/play.jpg"
-          icon.width: play.width
-          icon.height: icon.width
           width: control.width
           height: control.height * 0.3
           background: Rectangle {
                       implicitWidth: 100
                       implicitHeight: 40
-                      color: play.down ? "#d6d6d6" : "#BFE5D9"
+                      color: "#BFE5D9"
                       border.color: "gainsboro"
                       border.width: 1
                       radius: 10
@@ -99,8 +95,6 @@ Rectangle{
           id: jumpend
           x: play.x + play.width
           y: 0
-          icon.width: jumpend.width
-          icon.height: icon.width
           icon.color: "transparent"
           icon.source: "images/forward.jpg"
           width: control.width
@@ -108,7 +102,7 @@ Rectangle{
           background: Rectangle {
                       implicitWidth: 100
                       implicitHeight: 40
-                      color: jumpend.down ? "#d6d6d6" : "#BFE5D9"
+                      color: "#BFE5D9"
                       border.color: "gainsboro"
                       border.width: 1
                       radius: 10
@@ -122,8 +116,6 @@ Rectangle{
           x: mainWindow.width - del.width - cut.width*1
           y: - mainWindow.height + buttonline.height - cut.height*1.5
           //y: - 300
-          icon.width: cut.width
-          icon.height: icon.width
           icon.color: "transparent"
           icon.source: "images/cut.jpg"
           width: control.width * 0.6
@@ -131,12 +123,13 @@ Rectangle{
           background: Rectangle {
                       implicitWidth: 100
                       implicitHeight: 40
-                      color: button.down ? "#d6d6d6" : "#BFE5D9"
+                      color: "#BFE5D9"
                       border.color: "gainsboro"
                       border.width: 1
                       radius: 10
                   }
           onHoveredChanged:  hovered ? cut.opacity = 0.7 : cut.opacity = 1;
+
     }
 
     Button
@@ -145,8 +138,6 @@ Rectangle{
           x: mainWindow.width - del.width - cut.width*2.2
           onClicked: control.del()
           y: - mainWindow.height + buttonline.height - del.height*1.5
-          icon.width: del.width
-          icon.height: icon.width
           icon.color: "transparent"
           icon.source: "images/del.jpg"
           width: control.width * 0.6
@@ -154,7 +145,7 @@ Rectangle{
           background: Rectangle {
                       implicitWidth: 100
                       implicitHeight: 40
-                      color: button.down ? "#d6d6d6" : "#BFE5D9"
+                      color: "#BFE5D9"
                       border.color: "gainsboro"
                       border.width: 1
                       radius: 10
@@ -207,8 +198,6 @@ Rectangle{
           id: notes
           x: mainWindow.width - notes.width*2
           y: 0
-          icon.width: notes.width
-          icon.height: icon.width
           icon.color: "transparent"
           icon.source: "images/notes.jpg"
           width: control.width * 0.6
@@ -218,7 +207,7 @@ Rectangle{
           background: Rectangle {
                       implicitWidth: 100
                       implicitHeight: 40
-                      color: button.down ? "#d6d6d6" : "#BFE5D9"
+                      color: "#BFE5D9"
                       border.color: "gainsboro"
                       border.width: 1
                       radius: 10
