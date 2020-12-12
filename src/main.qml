@@ -10,6 +10,7 @@ import itu.project.backend 1.0
 ApplicationWindow
 {
     property string copiedUrl: ""
+    property bool isPlaying: false
 
     id: mainWindow
     width: 1000
@@ -47,8 +48,8 @@ ApplicationWindow
                 height: 200
                 Text {
                     y: name.height - 25
-                    x: 25
-                    text: qsTr("Congratulations, you successfully saved \n       your project!")
+                    x: 10
+                    text: qsTr("Congratulations, you successfully \n       saved your project!")
                 }
             }
 

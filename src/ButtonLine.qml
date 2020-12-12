@@ -9,6 +9,7 @@ Rectangle{
     signal play()
     signal del()
     signal addNote(var noteText)
+    property int num: 0
     function restoreLastNote()
     {
         text_for_notes.text = lastNoteText
@@ -77,10 +78,21 @@ Rectangle{
     {
           id: play
           x: button.width + jumpstart.width + (button.width/2)
-          onClicked: control.play()
+          onClicked: {
+              if (isPlaying == false)
+              {
+                 control.play()
+                 isPlaying = true
+              }
+              else
+              {
+                  //stop prehravania
+                  isPlaying = false
+              }
+          }
           y: 0
           icon.color: "transparent"
-          icon.source: "images/play.png"
+          icon.source: isPlaying? "images/pause.png" : "images/play.png"
           icon.height: play.height
           icon.width: icon.height
           width: control.width * 0.6
