@@ -65,39 +65,9 @@ void AudioFile::openFileUrl(QString url){
         return;
 
     m_filePath = url;
-    std::string stdStr = m_filePath.toStdString();
-    const char* fname = stdStr.c_str();
-    try
-    {
-        /*Demuxer* demuxer = new Demuxer(fname);
-        ContainerInfo info = demuxer->GetInfo();
-
-        m_duration = info.durationInMicroSeconds / 1000;
-        m_bitrate = info.bitRate;
-
-        auto baseNamePos = m_filePath.lastIndexOf('/')+1;
-        m_baseName = m_filePath.mid(baseNamePos);
-        m_format = QString(info.format->name);
-
-        //Stream info extraction
-        m_audioStreamIndex = av_find_best_stream(demuxer->containerContext, AVMEDIA_TYPE_AUDIO, -1, -1, NULL, 0);//Returns stream index
-        if (m_audioStreamIndex < 0)
-        {
-            if(demuxer != nullptr)
-                delete demuxer;
-            throw FFmpegException(std::string("Could not find ") + av_get_media_type_string(AVMEDIA_TYPE_AUDIO) + " stream in input file " + stdStr,m_audioStreamIndex);
-        }
-        m_audioStreamId = demuxer->containerContext->streams[m_audioStreamIndex]->id;//But we need the stream id too
-        m_frames = demuxer->GetFrameCount(m_audioStreamId);//Will process entire stream!
-        clearException();
-        if(demuxer != nullptr)
-            delete demuxer;*/
-    }
-    catch (const std::exception& e)
-    {
-        qDebug() << "Exception when opening audio file:";
-        processException(e);
-    }
+    m_duration = 5000;
+    auto baseNamePos = m_filePath.lastIndexOf('/')+1;
+    m_baseName = m_filePath.mid(baseNamePos);
 
     emit fileUrlChanged();
 }

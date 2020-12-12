@@ -1,3 +1,4 @@
+#include <QtQml>
 #ifdef Q_OS_ANDROID
 #include <QAndroidJniObject>
 #include <QtAndroid>
@@ -5,7 +6,7 @@
 
 #ifndef ANDROIDSELECTOR_H
 #define ANDROIDSELECTOR_H
-#include <QtQml>
+
 
 class AndroidPathUtil : public QObject
 {

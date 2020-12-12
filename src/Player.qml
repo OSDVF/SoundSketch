@@ -252,6 +252,7 @@ Rectangle
                                 console.log("Reposition fail")
                                 clipList.get(selectedClipIndex).posMs = posBeforeDrag
                             }
+                            selectedClipIndex = -1;
                         }
                     }
                 }
@@ -287,7 +288,7 @@ Rectangle
                             scaleMs: timeline.scale_ms
                             anchors.top: parent.top
                             anchors.bottom: parent.bottom
-                            peaceTimeWidth: durationMs * timeline.scale_ms
+                            width: durationMs * timeline.scale_ms
                             debugText: index.toString()
                             selected: selectedClipIndex === index
                             backColor: Style.backColors[Math.max(index,0) % Style.backColors.length]

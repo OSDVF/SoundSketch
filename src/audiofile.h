@@ -50,7 +50,7 @@ private:
     QString m_filePath;
     QString m_format;
     QString m_baseName;
-    qreal m_duration = 0;
+    qreal m_duration = 5000;
     int m_frames = 0;
     qreal m_bitrate = 0;
     int m_audioStreamId = 0;
