@@ -15,8 +15,6 @@ RC_ICONS = src/images/ikona.ico
 SOURCES += \
         src/audiofile.cpp \
         src/audiolevel.cpp \
-        src/clipitemmodel.cpp \
-        src/cliplistmodel.cpp \
         src/main.cpp \
         src/player.cpp \
         src/waveformplot.cpp
@@ -40,10 +38,8 @@ HEADERS += \
     src/WaveformGenerator.h \
     src/audiofile.h \
     src/audiolvel.h \
-    src/clipitemmodel.h \
-    src/cliplistmodel.h \
-    src/player.h \
-    src/waveformplot.h
+    src/waveformplot.h \
+    src/player.h
 
 INCLUDEPATH += $$PWD/include
 DEPENDPATH += $$PWD/include
@@ -61,3 +57,5 @@ DISTFILES += \
     images/record.jpg
 
 FORMS +=
+
+ANDROID_ABIS = armeabi-v7a arm64-v8a x86 x86_64

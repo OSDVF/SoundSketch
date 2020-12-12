@@ -181,6 +181,11 @@ QSGNode *WaveformPlot::updatePaintNode(QSGNode *parentNode, UpdatePaintNodeData 
         peaksNode = static_cast<QSGGeometryNode*>(parentNode->childAtIndex(0));
         rmsNode = static_cast<QSGGeometryNode*>(parentNode->childAtIndex(1));
 
+        static_cast<QSGFlatColorMaterial*>(peaksNode->material())->setColor(m_peakColor);
+        static_cast<QSGFlatColorMaterial*>(rmsNode->material())->setColor(m_rmsColor);
+        rmsNode->markDirty(QSGNode::DirtyMaterial);
+        peaksNode->markDirty(QSGNode::DirtyMaterial);
+
         rmsGeometry = new QSGGeometry(QSGGeometry::defaultAttributes_Point2D(), ceil(linesVertexCount));
         peaksGeometry = new QSGGeometry(QSGGeometry::defaultAttributes_Point2D(), ceil(linesVertexCount));
 

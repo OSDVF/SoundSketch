@@ -5,6 +5,7 @@ import QtQml.Models 2.15
 
 Rectangle {
     id: mainRect
+    property bool selected: false
     property color backColor: "#E9E9E9"
     //width of the clip when there is no error
     property real peaceTimeWidth: implicitWidth
@@ -21,10 +22,6 @@ Rectangle {
     property string debugText: ""
     readonly property real durationMs: plot.audioFile.durationMs
     property var audioFile
-    signal clicked(var mouse)
-    signal alternativePress(var mouse)
-    signal released(var mouse)
-    signal mousePosChanged(var mouse)
 
     property color textBackColor: "#5c000000"
     property real textRectRadius: 5
@@ -33,7 +30,13 @@ Rectangle {
     border.width: 2
     radius: 10
 
-    color: backColor
+    color: {
+        if(selected)
+        {
+            return Qt.lighter(backColor, 1.1);
+        }
+        return backColor;
+    }
 
     function addNote(pos, text) {
         notesModel.append({
@@ -45,7 +48,6 @@ Rectangle {
     ListModel {
         id: notesModel
     }
-
     WaveformPlot {
         id: plot
         anchors.fill: parent
@@ -80,21 +82,6 @@ Rectangle {
                 Text {
                     text: debugText
                 }
-            }
-        }
-        MouseArea {
-            id: mouseArea
-            anchors.fill: parent
-            onClicked: mainRect.clicked(mouse)
-            onPositionChanged: mainRect.mousePosChanged(mouse)
-            onPressAndHold: mainRect.alternativePress(mouse)
-            onPressed: {
-                if (Qt.platform.os == "windows")
-                    //Do not do it on Android
-                    mainRect.alternativePress(mouse)
-            }
-            onReleased: {
-                mainRect.released(mouse)
             }
         }
     }

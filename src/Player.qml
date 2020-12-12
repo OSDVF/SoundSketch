@@ -2,6 +2,9 @@ import QtQuick 2.0
 import QtQuick.Dialogs 1.3
 import QtQuick.Controls 2.0
 import itu.project.backend 1.0
+import QtQml.Models 2.15
+import "ClipReposition.js" as Rep;
+import "ClipList.js" as CList;
 
 Rectangle
 {
@@ -16,16 +19,26 @@ Rectangle
     //Aliases for project object model manipulation
     property alias clipList: clipList
     signal dropped(QtObject drop)
+    AudioFile
+    {
+        id: fileFactory
+    }
 
     function addClip(fileUrl, pixelOffset) {
         //Set new clip properties
-        clipList.append(pixelOffset / timeline.scale_ms + timeline.offset_ms, fileUrl)
         dropbox.visible = false
+        CList.appendClip(pixelOffset / timeline.scale_ms + timeline.offset_ms, fileUrl)
+    }
+
+    function addClipAtPos(fileUrl, msPos) {
+        //Set new clip properties
+        dropbox.visible = false
+        CList.appendClip(msPos, fileUrl)
     }
 
     function addNoteAtHandlePos(text)
     {
-        var index = clipList.getIndexOfItemAtPos(pos_ms);
+        var index = CList.getIndexOfItemAtPos(pos_ms);
         if(index === -1)
         {
             nothingSelectedDialog.visible = true
@@ -41,23 +54,36 @@ Rectangle
     function deleteSelectedClip()
     {
         if(clipList.count > 0)
-            clipList.remove(selectedClipIndex);
-        dropbox.visible = true
+            if(selectedClipIndex != -1)
+                clipList.remove(selectedClipIndex);
+            else //TODO some dialog
+            {
+
+            }
+        else //TODO some dialog
+        {
+
+        }
+        if(clipList.count == 0)
+            dropbox.visible = true
     }
 
     function deleteAllClips()
     {
         clipList.clear()
+        dropbox.visible = true
     }
 
     function getSelectedClipUrl()
     {
-        return clipList.get(selectedClipIndex).audioFile.fileUrl;
+        if(selectedClipIndex !== -1)
+            return clipList.get(selectedClipIndex).audioFile.fileUrl;
+        return "";
     }
 
     function play()
     {
-        var index = clipList.getIndexOfItemAtPos(pos_ms);
+        var index = CList.getIndexOfItemAtPos(pos_ms);
         if(index === -1)
         {
             time_offset_slider.value += 10;// * timeline.unit_scale;
@@ -91,15 +117,24 @@ Rectangle
         timer.start();
     }
 
-    //Models
-    ClipListModel {
+    ListModel {
         id: clipList
+        property real totalDurationMs: {
+            if(clipList.count !== 0)
+            {
+                var last = clipList.get(clipList.count-1);
+                return last.posMs + last.audioFile.durationMs;
+            }
+            else
+                return 50000
+        }
     }
-    ClipListModel {
-        id: repositionPreview
-    }
+
     property bool dragOngoing: false
+    property real dragStartPos: 0
+    property real dragHandleOffset: 0
     property bool repositionSuccess: false
+    property real posBeforeDrag: 0
 
     Rectangle
     {
@@ -130,22 +165,6 @@ Rectangle
             MouseArea
             {
                 id: clipsMouseArea
-                function endReposition(mouse)
-                {
-                    if(dragOngoing)
-                    {
-                        dragOngoing = false
-                        console.log("Ended")
-                        if(repositionSuccess)
-                        {
-                            console.log("Success")
-                            repositionPreview.copyTo(clipList)//Update list with preview result
-                        }
-                        listDisplay.model = clipList
-                        repositionPreview.clear()
-                    }
-                }
-
                 anchors.fill: parent
                 onWheel:
                 {
@@ -189,14 +208,71 @@ Rectangle
                         timeline.redraw();
                     }
                 }
-                onPositionChanged:
+                function goodPress(mouse)
                 {
+                    selectedClipIndex = CList.getIndexOfItemAtPos(mouse.x/ timeline.scale_ms + timeline.offset_ms)
+                    if(selectedClipIndex != -1)
+                    {
+                        dragHandleOffset = mouse.x - (clipList.get(selectedClipIndex).posMs - time_offset_slider.value) * timeline.scale_ms
+                        console.log("selected ", selectedClipIndex)
+                    }
+                }
+
+                onMouseXChanged: {
                     if(pressed)
                     {
                         timeline.value = mouseX / width;
                     }
+                    if(Math.abs(mouse.x - dragStartPos) >= 5 && selectedClipIndex != -1)
+                    {
+                        if(!dragOngoing)
+                        {
+                            dragOngoing = true;
+                            posBeforeDrag = clipList.get(selectedClipIndex).posMs;
+                        }
+                        if(dragOngoing)
+                        {
+                            var pos = Math.max(0, (mouse.x - dragHandleOffset)/ timeline.scale_ms + timeline.offset_ms);
+                            clipList.get(selectedClipIndex).posMs = pos;
+                            console.log("setting item ", selectedClipIndex," pos ", pos)
+                        }
+                    }
                 }
-                onReleased: endReposition(mouse)
+
+                onReleased: {
+                    if(dragOngoing)
+                    {
+                        dragOngoing = false
+                        console.log("Ended")
+                        repositionSuccess = false
+                        if(selectedClipIndex != -1)
+                        {
+                            repositionSuccess = Rep.reposition(clipList, selectedClipIndex);
+                            console.log("repositioning ", selectedClipIndex)
+                            if(repositionSuccess)
+                            {
+                                console.log("Success")
+                            }
+                            else
+                            {
+                                console.log("Reposition fail")
+                                clipList.get(selectedClipIndex).posMs = posBeforeDrag
+                            }
+                        }
+                    }
+                }
+
+                onPressAndHold: if(Qt.platform.os != "windows") goodPress(mouse)
+                onPressed: {
+                    if(!dragOngoing)
+                    {
+                        dragStartPos = mouse.x
+                        if(Qt.platform.os == "windows")//Do not do it on Android
+                            goodPress(mouse)
+                    }
+
+                }
+                preventStealing: true
 
                 Flickable
                 {
@@ -212,44 +288,17 @@ Rectangle
                         id: listDisplay
                         model: clipList
                         AudioClip {
-                            audioFile: model.clipItemModel.audioFile
-                            x: model.clipItemModel.posMs * timeline.scale_ms
+                            audioFile: model.audioFile
+                            x: model.posMs * timeline.scale_ms
                             scaleMs: timeline.scale_ms
                             anchors.top: parent.top
                             anchors.bottom: parent.bottom
                             peaceTimeWidth: durationMs * timeline.scale_ms
                             debugText: index.toString()
-                            backColor: {
-                                var c = Style.backColors[Math.max(index,0) % Style.backColors.length];
-                                if(selectedClipIndex === index)
-                                {
-                                    return Qt.lighter(c,1.1);
-                                }
-                                return c;
-                            }
-
+                            selected: selectedClipIndex === index
+                            backColor: Style.backColors[Math.max(index,0) % Style.backColors.length]
                             waveColor: Style.waveColors[Math.max(index,0) % Style.waveColors.length]
                             formatInfoTextColor: Style.formatInfoTextColor
-                            onClicked:
-                            {
-                                selectedClipIndex = index;
-                                endReposition();
-                            }
-                            onAlternativePress: {
-                                dragOngoing = true
-                                selectedClipIndex = index;
-                                console.log("Drag Started")
-                                clipList.copyTo(repositionPreview);
-                                listDisplay.model = repositionPreview
-                            }
-
-                            onMousePosChanged: {
-                                if(dragOngoing)
-                                {
-                                    repositionSuccess = clipList.reposition(index,mouse.x,repositionPreview) !== -1
-                                }
-                            }
-                            onReleased: clipsMouseArea.endReposition(mouse)
                         }
                     }
                 }

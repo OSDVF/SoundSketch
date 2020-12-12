@@ -48,7 +48,7 @@ ApplicationWindow
                 Text {
                     y: name.height - 25
                     x: 25
-                    text: qsTr("You successfully created \n       a new project!")
+                    text: qsTr("Congratulations, you successfully saved \n       your project!")
                 }
             }
 
@@ -58,11 +58,24 @@ ApplicationWindow
             id: dialog2
             x: mainWindow.width / 2 - dialog.width/2
             y: mainWindow.height / 2 - dialog.height/2
-            standardButtons: Dialog.Ok
+            standardButtons: {
+                if(openedProjectModel.clips.count > 0)
+                {
+                    return Dialog.Yes | Dialog.No
+                }
+                return Dialog.Ok
+            }
+
             visible: false
             Text {
                 y: 5
-                text: qsTr("Click on timeline to start a new project")
+                text: {
+                    if(openedProjectModel.clips.count>0)
+                    {
+                        return qsTr("Do you really want to discard your current project?")
+                    }
+                    else return qsTr("Successfully created new project")
+                }
             }
             background: Rectangle {
                         implicitWidth: 100
@@ -72,12 +85,14 @@ ApplicationWindow
                         border.width: 1
                         radius: 5
                     }
-            onAccepted: console.log("Ok clicked")
+            onAccepted: {
+                    player.deleteAllClips()
+            }
         }
         Menu {
 
             title: qsTr("Project")
-            Action { text: qsTr("New..."); onTriggered: { player.deleteAllClips(); dialog2.visible = true}}
+            Action { text: qsTr("New..."); onTriggered: { dialog2.visible = true}}
             Action { text: qsTr("Open..."); onTriggered: importDialog.open()}
             Action { text: qsTr("Save..."); onTriggered: dialog.visible = true }
             MenuSeparator { }
@@ -92,7 +107,11 @@ ApplicationWindow
             }
             Action { text: qsTr("Cut"); onTriggered: {copiedUrl = player.getSelectedClipUrl(); player.deleteSelectedClip()}}
             Action { text: qsTr("Copy"); onTriggered: copiedUrl = player.getSelectedClipUrl()}
-            Action { text: qsTr("Paste"); onTriggered: importAudio(copiedUrl, 0) }
+            Action { text: qsTr("Paste"); onTriggered: {
+                    if(copiedUrl.length > 0)
+                        player.addClipAtPos(copiedUrl, player.pos_ms)
+                }
+            }
         }
 
         Menu {
@@ -294,7 +313,7 @@ You can also open an existing project, in Project->Open."
     {
         id: openedProjectModel
         property string filePath: ""
-        property ClipListModel clips: player.clipList
+        property ListModel clips: player.clipList
     }
 
     Component.onCompleted:

@@ -19,5 +19,7 @@
         <file>images/play.png</file>
         <file>images/record.jpg</file>
         <file>images/newproject.png</file>
+        <file>ClipReposition.js</file>
+        <file>ClipList.js</file>
     </qresource>
 </RCC>
