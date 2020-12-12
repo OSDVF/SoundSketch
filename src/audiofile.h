@@ -12,7 +12,7 @@
 class AudioFile : public QObject
 {
     Q_OBJECT
-    Q_PROPERTY(QString fileUrl READ fileUrl WRITE openFileUrl NOTIFY fileUrlChanged REQUIRED)
+    Q_PROPERTY(QString fileUrl READ fileUrl WRITE openFileUrl NOTIFY fileUrlChanged)
     Q_PROPERTY(qreal durationMs READ durationMs NOTIFY fileUrlChanged STORED false)
     Q_PROPERTY(qreal bitrate READ bitrate NOTIFY fileUrlChanged STORED false)
     Q_PROPERTY(QString baseName READ baseName NOTIFY fileUrlChanged STORED false)
@@ -28,6 +28,7 @@ class AudioFile : public QObject
     QML_ELEMENT
 public:
     explicit AudioFile(QObject *parent = nullptr);
+    Q_INVOKABLE AudioFile *create(QString fileUrl);
 
     qreal durationMs();
     int frameCount();

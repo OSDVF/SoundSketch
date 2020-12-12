@@ -19,8 +19,6 @@ SOURCES += \
         src/AndroidPathUtil.cpp \
         src/audiofile.cpp \
         src/audiolevel.cpp \
-        src/clipitemmodel.cpp \
-        src/cliplistmodel.cpp \
         src/main.cpp \
         src/waveformplot.cpp
 
@@ -44,9 +42,8 @@ HEADERS += \
     src/WaveformGenerator.h \
     src/audiofile.h \
     src/audiolvel.h \
-    src/clipitemmodel.h \
-    src/cliplistmodel.h \
-    src/waveformplot.h
+    src/waveformplot.h \
+    src/player.h
 
 INCLUDEPATH += $$PWD/include
 DEPENDPATH += $$PWD/include
@@ -68,8 +65,3 @@ FORMS +=
 ANDROID_ABIS = arm64-v8a
 
 ANDROID_PACKAGE_SOURCE_DIR = $$PWD/android
-
-android
-{
-    LIBS += -L$$PWD/android/libs/
-}

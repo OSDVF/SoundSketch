@@ -519,7 +519,7 @@ You can also open an existing project, in Project->Open."
     {
         id: openedProjectModel
         property string filePath: ""
-        property ClipListModel clips: player.clipList
+        property ListModel clips: player.clipList
     }
 }
 

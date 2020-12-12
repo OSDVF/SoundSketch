@@ -9,6 +9,13 @@ AudioFile::AudioFile(QObject *parent) : QObject(parent)
 
 }
 
+AudioFile* AudioFile::create(QString fileUrl)
+{
+    AudioFile *newFile = new AudioFile();
+    newFile->openFileUrl(fileUrl);
+    return newFile;
+}
+
 QString AudioFile::fileUrl(){
     return m_filePath;
 }

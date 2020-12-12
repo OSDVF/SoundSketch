@@ -3,8 +3,8 @@
 #include <QQmlApplicationEngine>
 #include "waveformplot.h"
 #include "audiofile.h"
-#include "cliplistmodel.h"
 #include "AndroidPathUtil.h"
+#include "player.h"
 
 int main(int argc, char *argv[])
 {
@@ -22,8 +22,8 @@ int main(int argc, char *argv[])
         }, Qt::QueuedConnection);
     qmlRegisterType<WaveformPlot>("itu.project.frontend", 1, 0, "WaveformPlot");
     qmlRegisterType<AudioFile>("itu.project.backend", 1, 0, "AudioFile");
-    qmlRegisterType<ClipListModel>("itu.project.backend", 1, 0, "ClipListModel");
     qmlRegisterType<AndroidPathUtil>("itu.project.backend", 1, 0, "AndroidPathUtil");
+    qmlRegisterType<player>("itu.project.backend", 1, 0, "PlayerBackend");
     qmlRegisterSingletonType(QUrl("qrc:///Style.qml"), "itu.project.frontend", 1, 0, "Style");
     engine.load(url);
 
