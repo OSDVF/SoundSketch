@@ -29,10 +29,19 @@ ApplicationWindow
         title: "Title"
         standardButtons: Dialog.Ok
         visible: false
-        Text {
-            //id: name
-            text: qsTr("You successfully created a new project!")
+        Image {
+            id: name
+            y: 0
+            source: "images/newproject.png"
+            width: 200
+            height: 200
+            Text {
+                y: name.height - 25
+                x: 25
+                text: qsTr("You successfully created \n       a new project!")
+            }
         }
+
         onAccepted: console.log("Ok clicked")
     }
 
@@ -108,7 +117,7 @@ ApplicationWindow
                     border.color: "gainsboro"
                     radius: 7
                 }
-                onClicked: dialog.visible = true
+                onClicked: player.deleteAllClips()
             }
             Button{
                 id: openproject
@@ -133,7 +142,7 @@ ApplicationWindow
                 text: "Save"
                 font.family: "Tahoma"
                 font.pointSize: 10
-                onClicked: saveDialog.open()
+                onClicked: dialog.visible = true
                 background: Rectangle {
                     color: "#BFE5D9"
                     border.color: "gainsboro"
@@ -379,7 +388,7 @@ ApplicationWindow
         visible: false
         border.color: "gainsboro"
         Text{
-            x: 20
+            x: 10
             y: 50
             text: "This application is designed for simple and quick audio editing.
 We want the users to be able to capture their thougts, ideas and
@@ -396,8 +405,8 @@ of the sample, by clicking on the forward/backward arrows.
 Editing: Audio is cut to the right to the position where the
 marker is put will be deleted when you press the icon of scissors.
 You can delete the whole clip by pressing the trashcan.
-A note is added on the time where marker is, and by pressing notes.
-Working with files:You can save your audio sample,
+A note is added on the time where marker is, and by pressing
+notes. Working with files:You can save your audio sample,
 and your whole project in the menubar Project->Save.
 You can also open an existing project, in Project->Open."
             horizontalAlignment: Text.AlignHCenter

@@ -18,5 +18,6 @@
         <file>images/notes.jpg</file>
         <file>images/menu.png</file>
         <file>images/return.jpg</file>
+        <file>images/newproject.png</file>
     </qresource>
 </RCC>
