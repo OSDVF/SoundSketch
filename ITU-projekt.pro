@@ -18,6 +18,7 @@ SOURCES += \
         src/clipitemmodel.cpp \
         src/cliplistmodel.cpp \
         src/main.cpp \
+        src/player.cpp \
         src/waveformplot.cpp
 
 RESOURCES += \
@@ -41,6 +42,7 @@ HEADERS += \
     src/audiolvel.h \
     src/clipitemmodel.h \
     src/cliplistmodel.h \
+    src/player.h \
     src/waveformplot.h
 
 INCLUDEPATH += $$PWD/include
