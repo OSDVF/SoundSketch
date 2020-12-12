@@ -26,13 +26,13 @@ Rectangle
 
     function addClip(fileUrl, pixelOffset) {
         //Set new clip properties
-        dropbox.visible = false
+        //dropbox.visible = false
         CList.appendClip(pixelOffset / timeline.scale_ms + timeline.offset_ms, fileUrl)
     }
 
     function addClipAtPos(fileUrl, msPos) {
         //Set new clip properties
-        dropbox.visible = false
+        //dropbox.visible = false
         CList.appendClip(msPos, fileUrl)
     }
 
@@ -160,11 +160,43 @@ Rectangle
                 onWheel:
                 {
                     var sc = timeline.scale_s + (wheel.angleDelta.y / 12)
-                    if (sc > timeline.scale_s_min
-                            && sc <= timeline.scale_s_max)
-                            {
-                        timeline.scale_s = sc
-                        timeline.redraw()
+                    if (sc > timeline.scale_s_min && sc <= timeline.scale_s_max)
+                    {
+                        timeline.value *= sc/timeline.scale_s;
+                        timeline.scale_s = sc;
+                        timeline.redraw();
+                    }
+                    else if(sc <= timeline.scale_s_min && timeline.unit == 10)
+                    {
+                        timeline.unit = 2;
+                        timeline.unit_scale = 10.0;
+                        timeline.unit_step = 10;
+                        timeline.scale_s = timeline.scale_s_max;
+                        timeline.redraw();
+                    }
+                    else if(sc <= timeline.scale_s_min && timeline.unit == 2)
+                    {
+                        timeline.unit = 5;
+                        timeline.unit_scale = 60.0;
+                        timeline.unit_step = 1;
+                        timeline.scale_s = 240;
+                        timeline.redraw();
+                    }
+                    else if(sc > 96 && timeline.unit == 5)
+                    {
+                        timeline.unit = 2;
+                        timeline.unit_scale = 10.0;
+                        timeline.unit_step = 10;
+                        timeline.scale_s = 72;
+                        timeline.redraw();
+                    }
+                    else if(sc > timeline.scale_s_max && timeline.unit == 2)
+                    {
+                        timeline.unit = 10;
+                        timeline.unit_scale = 1.0;
+                        timeline.unit_step = 1;
+                        timeline.scale_s = timeline.scale_s_min;
+                        timeline.redraw();
                     }
                 }
                 function goodPress(mouse)
@@ -270,6 +302,22 @@ Rectangle
         id: timeline
     }
 
+    PlayerBackend
+    {
+        id: player_backend
+        onSet_pos_ms:
+        {
+            var value = player_backend.audio_pos_from_start + pos_ms;
+            value -= timeline.width_ms * timeline.value;
+            time_offset_slider.value = value;// / timeline.unit_scale;
+        }
+        onDone:
+        {
+            time_offset_slider.value += 10;
+            control.play();
+        }
+    }
+
     Rectangle
     {
         x: timeline.content_x + timeline.content_width * timeline.value
@@ -289,7 +337,7 @@ Rectangle
         value: from
         onValueChanged:
         {
-            timeline.offset_ms = parseInt(value, 10);
+            timeline.offset_ms = parseInt(value, 10);// * timeline.unit_scale;
             timeline.redraw();
         }
     }

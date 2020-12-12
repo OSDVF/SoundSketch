@@ -7,23 +7,27 @@ Slider
     width: parent.width
     height: 40
 
+    property int unit : 10//pocet jednotek do jedne vetsi
+    property real unit_scale: 1.0//scale jedne vetsi jednotky 1.0 == 1s, 60.0 == 1min
+    property int unit_step: 1
     readonly property int scale_s_min: 40
     readonly property int scale_s_max: 400
-    readonly property int scale_step: 10
+    readonly property int scale_step: unit
     //The number of pixels in one second on the timeline
     property int scale_s: scale_s_min
     //The number of pixels in one milisecond on the timeline
-    readonly property real scale_ms: scale_s / 1000
+    readonly property real scale_ms: (scale_s / 1000) / unit_scale
     property int offset_ms: 0
     readonly property int offset_pixels: (offset_ms) * (scale_ms) //Used for clip positioning
-    readonly property real width_ms: (timeline.width / timeline.scale_s)*1000
+    readonly property real width_ms: (timeline.width / scale_ms)
 
     readonly property alias content_x: timeline.x
     readonly property int content_y: height
     readonly property alias content_width: timeline.width
 
-    readonly property int pos_ms: offset_ms + width_ms*value
-    readonly property int single_offset: ((timeline.offset_s == 1.0) ? 0 : (timeline.scale_s/10 * parseInt(timeline.offset_s*10, 10)))
+    readonly property int pos_ms: (offset_ms + width_ms*value)//*unit_scale
+    readonly property int single_offset: ((timeline.offset_s == 1.0) ? 0 : (timeline.scale_s/unit * parseInt(timeline.offset_s*unit, 10)))
+
 
     background: Canvas
     {
@@ -36,7 +40,7 @@ Slider
 
 
         readonly property int scale_s: control.scale_s
-        readonly property real offset_s: 1.0 - (control.offset_ms%1000)/1000.0
+        readonly property real offset_s: 1.0 - ((control.offset_ms%1000)/1000.0)/unit_scale
 
         onPaint:
         {
@@ -47,7 +51,7 @@ Slider
             ctx.lineWidth = 1
 
             ctx.beginPath()
-            for(var x=0;x <= width;x += scale_s/10)
+            for(var x=0;x <= width;x += scale_s/unit)
             {
                 ctx.moveTo(x, 0)
                 if(x % scale_s == single_offset)
@@ -71,7 +75,8 @@ Slider
             Text
             {
                 width: timeline.scale_s
-                text: Math.ceil(control.offset_ms/1000) + index
+                text: ((Math.ceil(control.offset_ms/1000))+unit_step-1 - ((Math.ceil(control.offset_ms/1000))+unit_step-1)%unit_step) + index*unit_step
+                //text: Math.ceil((control.offset_ms/1000)) + index*unit_step
                 font.pointSize: 5
             }
         }

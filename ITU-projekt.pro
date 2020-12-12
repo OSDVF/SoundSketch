@@ -20,6 +20,7 @@ SOURCES += \
         src/audiofile.cpp \
         src/audiolevel.cpp \
         src/main.cpp \
+        src/player.cpp \
         src/waveformplot.cpp
 
 RESOURCES += \
@@ -42,8 +43,8 @@ HEADERS += \
     src/WaveformGenerator.h \
     src/audiofile.h \
     src/audiolvel.h \
-    src/waveformplot.h \
-    src/player.h
+    src/player.h \
+    src/waveformplot.h
 
 INCLUDEPATH += $$PWD/include
 DEPENDPATH += $$PWD/include

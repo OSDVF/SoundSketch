@@ -521,6 +521,11 @@ You can also open an existing project, in Project->Open."
         property string filePath: ""
         property ListModel clips: player.clipList
     }
+
+    Component.onCompleted:
+    {
+        buttonline.play.connect(player.play);
+    }
 }
 
 /*##^##
