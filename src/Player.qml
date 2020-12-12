@@ -83,20 +83,13 @@ Rectangle
 
     function play()
     {
-        var index = CList.getIndexOfItemAtPos(pos_ms);
-        if(index === -1)
-        {
-            time_offset_slider.value += 10;// * timeline.unit_scale;
-            timeline.redraw();
-            delay(10, function()
-            {
-                play();
-            });
-            return;
-        }
-        console.log(index);
-        player_backend.audio_pos_from_start = clipList.get(index).posMs;
-        player_backend.play(clipList.get(index).audioFile, pos_ms - player_backend.audio_pos_from_start);
+        player_backend.audio_pos_from_start = pos_ms - player_backend.audio_pos_from_start
+        player_backend.play();
+    }
+
+    function pause()
+    {
+        player_backend.stop()
     }
 
     function jumpbeg()

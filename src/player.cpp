@@ -6,7 +6,8 @@
 player::player(QObject* parent)
 : QObject(parent), playing(false)
 {
-
+    timer = new QTimer(this);
+    timer->setInterval(100);
 }
 
 player::~player()
@@ -14,7 +15,7 @@ player::~player()
     this->stop();
 }
 
-void player::play(AudioFile* audio, unsigned offset_ms)
+void player::play()
 {
     /*if(playing)
     {
@@ -43,16 +44,18 @@ void player::play(AudioFile* audio, unsigned offset_ms)
     audio_out->setNotifyInterval(100);
     audio_out->setVolume(50);
     audio_out->start(buffer);*/
+    connect(timer, SIGNAL(timeout()), this, SLOT(notify_slot()));
     playing = true;
+    timer->start();
 }
 
 void player::stop()
 {
-    if(playing)
-    {
-        /*delete audio_out;
+    playing = false;
+    disconnect(timer, SIGNAL(timeout()), this, SLOT(notify_slot()));
+    timer->stop();
+    /*delete audio_out;
         delete buffer;*/
-    }
 }
 
 void player::state_changed(QAudio::State state)
@@ -64,5 +67,5 @@ void player::state_changed(QAudio::State state)
 void player::notify_slot()
 {
     if(playing)
-        emit set_pos_ms((buffer->pos()/qreal(buffer->size()))*audio_len_ms);
+        emit set_pos_ms(audio_pos_from_start+=100);
 }

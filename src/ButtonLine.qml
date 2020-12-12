@@ -8,6 +8,7 @@ import QtQuick.Layouts 1.11
 Rectangle{
 
     signal play()
+    signal pause()
     signal del()
     signal jumpend()
     signal jumpbeg()
@@ -80,11 +81,12 @@ Rectangle{
           {
               if (isPlaying)
               {
-                  control.play()
+                  control.pause()
                   isPlaying = false
               }
               else
               {
+                  control.play()
                   isPlaying = true
               }
           }

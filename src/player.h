@@ -18,21 +18,21 @@ public:
 
     int get_audio_pos_from_start() { return audio_pos_from_start; }
     void set_audio_pos_from_start(int id) { audio_pos_from_start = id; }
+    Q_INVOKABLE void play();
+    Q_INVOKABLE void stop();
 signals:
     void set_pos_ms(int pos_ms);
     void done();
-public slots:
-    Q_INVOKABLE void play(AudioFile* audio, unsigned offset_ms);
-    Q_INVOKABLE void stop();
 private slots:
     void state_changed(QAudio::State);
     void notify_slot();
 private:
     QAudioOutput* audio_out;
     QBuffer* buffer;
-    quint64 audio_len_ms;
-    bool playing;
-    int audio_pos_from_start;
+    quint64 audio_len_ms = 0;
+    bool playing = false;
+    int audio_pos_from_start = 0;
+    QTimer* timer;
 };
 
 #endif // PLAYER_H
