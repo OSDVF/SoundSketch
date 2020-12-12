@@ -1,4 +1,7 @@
-QT += quick multimedia widgets androidextras
+QT += quick multimedia widgets
+android {
+    QT += androidextras
+}
 
 CONFIG += c++11
 
@@ -13,6 +16,7 @@ CONFIG(debug, debug|release) {
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+        src/AndroidPathUtil.cpp \
         src/audiofile.cpp \
         src/audiolevel.cpp \
         src/clipitemmodel.cpp \
