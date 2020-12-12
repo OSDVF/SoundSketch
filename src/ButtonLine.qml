@@ -75,10 +75,21 @@ Rectangle{
     {
           id: play
           x: jumpstart.x + jumpstart.width
-          onClicked: control.play()
+          onClicked:
+          {
+              if (isPlaying)
+              {
+                  control.play()
+                  isPlaying = false
+              }
+              else
+              {
+                  isPlaying = true
+              }
+          }
           y: 0
           icon.color: "transparent"
-          icon.source: "images/play.jpg"
+          icon.source: isPlaying? "images/pause.png" : "images/play.jpg"
           icon.width: play.width
           icon.height: icon.width
           width: control.width

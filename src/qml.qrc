@@ -19,5 +19,6 @@
         <file>images/menu.png</file>
         <file>images/return.jpg</file>
         <file>images/newproject.png</file>
+        <file>images/pause.png</file>
     </qresource>
 </RCC>

@@ -16,6 +16,7 @@ ApplicationWindow
     title: qsTr("Hello World")
 
     property string copiedUrl: ""
+    property bool isPlaying: false
 
     FileDialog {
         id: saveDialog
