@@ -9,6 +9,8 @@ import itu.project.backend 1.0
 
 ApplicationWindow
 {
+    property string copiedUrl: ""
+
     id: mainWindow
     width: 1000
     height: 480
@@ -30,12 +32,54 @@ ApplicationWindow
             selectMultiple : false
             selectExisting: false
         }
+        Dialog {
+            id: dialog
+            x: mainWindow.width / 2 - dialog.width/2
+            y: mainWindow.height / 2 - dialog.height/2
+            title: "Title"
+            standardButtons: Dialog.Ok
+            visible: false
+            Image {
+                id: name
+                y: 0
+                source: "images/newproject.png"
+                width: 200
+                height: 200
+                Text {
+                    y: name.height - 25
+                    x: 25
+                    text: qsTr("You successfully created \n       a new project!")
+                }
+            }
+
+            onAccepted: console.log("Ok clicked")
+        }
+        Dialog {
+            id: dialog2
+            x: mainWindow.width / 2 - dialog.width/2
+            y: mainWindow.height / 2 - dialog.height/2
+            standardButtons: Dialog.Ok
+            visible: false
+            Text {
+                y: 5
+                text: qsTr("Click on timeline to start a new project")
+            }
+            background: Rectangle {
+                        implicitWidth: 100
+                        implicitHeight: 40
+                        color: "#BFE5D9"
+                        border.color: "gainsboro"
+                        border.width: 1
+                        radius: 5
+                    }
+            onAccepted: console.log("Ok clicked")
+        }
         Menu {
 
             title: qsTr("Project")
-            Action { text: qsTr("New...") }
+            Action { text: qsTr("New..."); onTriggered: { player.deleteAllClips(); dialog2.visible = true}}
             Action { text: qsTr("Open..."); onTriggered: importDialog.open()}
-            Action { text: qsTr("Save...");onTriggered: saveDialog.open() }
+            Action { text: qsTr("Save..."); onTriggered: dialog.visible = true }
             MenuSeparator { }
             Action { text: qsTr("Quit"); onTriggered: Qt.quit() }
         }
@@ -46,9 +90,9 @@ ApplicationWindow
                 text: qsTr("Import Audio")
                 onTriggered: importDialog.open()
             }
-            Action { text: qsTr("Cut") }
-            Action { text: qsTr("Copy") }
-            Action { text: qsTr("Paste") }
+            Action { text: qsTr("Cut"); onTriggered: {copiedUrl = player.getSelectedClipUrl(); player.deleteSelectedClip()}}
+            Action { text: qsTr("Copy"); onTriggered: copiedUrl = player.getSelectedClipUrl()}
+            Action { text: qsTr("Paste"); onTriggered: importAudio(copiedUrl, 0) }
         }
 
         Menu {

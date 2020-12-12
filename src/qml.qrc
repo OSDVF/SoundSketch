@@ -18,5 +18,6 @@
         <file>images/notes.jpg</file>
         <file>images/play.png</file>
         <file>images/record.jpg</file>
+        <file>images/newproject.png</file>
     </qresource>
 </RCC>

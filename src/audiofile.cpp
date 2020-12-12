@@ -10,7 +10,8 @@ AudioFile::AudioFile(QObject *parent) : QObject(parent)
 }
 
 QString AudioFile::fileUrl(){
-    return m_filePath;
+    QUrl url = QUrl::fromLocalFile(m_filePath);
+    return url.toString();
 }
 qreal AudioFile::durationMs()
 {

@@ -45,6 +45,16 @@ Rectangle
         dropbox.visible = true
     }
 
+    function deleteAllClips()
+    {
+        clipList.clear()
+    }
+
+    function getSelectedClipUrl()
+    {
+        return clipList.get(selectedClipIndex).audioFile.fileUrl;
+    }
+
     //Models
     ClipListModel {
         id: clipList
