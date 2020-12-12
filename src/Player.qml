@@ -103,18 +103,12 @@ Rectangle
 
     function jumpbeg()
     {
-        timeline.handle.x = 5;
-        handleline.x = 15;
-        timeline.redraw();
         time_offset_slider.value = 0;
     }
 
     function jumpend()
     {
         time_offset_slider.value = time_offset_slider.to;
-        timeline.handle.x = timeline.width - 30;
-        handleline.x = timeline.width - 20;
-        timeline.redraw();
     }
 
     Timer

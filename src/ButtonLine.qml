@@ -30,16 +30,16 @@ Rectangle{
         background: Rectangle {
                     implicitWidth: 100
                     implicitHeight: 40
-                    color: button.down ? "#d6d6d6" : "#BFE5D9"
+                    color: "#BFE5D9"
                     border.color: "gainsboro"
                     border.width: 1
                     radius: 10
                 }
         icon.color: "transparent"
         icon.source: "images/record.jpg"
-        icon.height: button.height
+        icon.height: height
         icon.width: icon.height
-        onHoveredChanged:  hovered ? button.opacity = 0.7 : button.opacity = 1;
+        onHoveredChanged:  hovered ? opacity = 0.7 : opacity = 1;
         onClicked: audiorecorder.visible = true
         Audiorecorder{
             id: audiorecorder
@@ -68,7 +68,7 @@ Rectangle{
           background: Rectangle {
                       implicitWidth: 100
                       implicitHeight: 40
-                      color: button.down ? "#d6d6d6" : "#BFE5D9"
+                      color: "#BFE5D9"
                       border.color: "gainsboro"
                       border.width: 1
                       radius: 10
@@ -103,7 +103,7 @@ Rectangle{
           background: Rectangle {
                       implicitWidth: 100
                       implicitHeight: 40
-                      color: button.down ? "#d6d6d6" : "#BFE5D9"
+                      color: "#BFE5D9"
                       border.color: "gainsboro"
                       border.width: 1
                       radius: 10
@@ -125,7 +125,7 @@ Rectangle{
           background: Rectangle {
                       implicitWidth: 100
                       implicitHeight: 40
-                      color: button.down ? "#d6d6d6" : "#BFE5D9"
+                      color: "#BFE5D9"
                       border.color: "gainsboro"
                       border.width: 1
                       radius: 10
@@ -148,7 +148,7 @@ Rectangle{
           background: Rectangle {
                       implicitWidth: 100
                       implicitHeight: 40
-                      color: button.down ? "#d6d6d6" : "#BFE5D9"
+                      color: "#BFE5D9"
                       border.color: "gainsboro"
                       border.width: 1
                       radius: 10
@@ -171,7 +171,7 @@ Rectangle{
           background: Rectangle {
                       implicitWidth: 100
                       implicitHeight: 40
-                      color: button.down ? "#d6d6d6" : "#BFE5D9"
+                      color: "#BFE5D9"
                       border.color: "gainsboro"
                       border.width: 1
                       radius: 10
@@ -235,7 +235,7 @@ Rectangle{
           background: Rectangle {
                       implicitWidth: 100
                       implicitHeight: 40
-                      color: button.down ? "#d6d6d6" : "#BFE5D9"
+                      color: "#BFE5D9"
                       border.color: "gainsboro"
                       border.width: 1
                       radius: 10
