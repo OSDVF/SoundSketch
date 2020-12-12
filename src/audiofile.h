@@ -5,6 +5,7 @@
 #include <QtQuick>
 #include <QByteArray>
 
+
 /**
  * @brief Hold properties of an audio file container
  */

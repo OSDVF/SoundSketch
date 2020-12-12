@@ -23,6 +23,10 @@ ApplicationWindow
         selectMultiple : false
         selectExisting: false
     }
+    AndroidPathUtil{
+        id: pathUtil
+    }
+
     Dialog {
         id: dialog
         x: mainWindow.width / 2 - dialog.width/2
@@ -336,6 +340,7 @@ ApplicationWindow
     readonly property var supportedExtensions: ["mp3", "wav", "aac", "m4a"]
     function importAudio(fileName,pixelPosition)
     {
+        fileName = pathUtil.contentUriToPath(fileName)
         if (supportedExtensions.indexOf(extension(fileName).toLowerCase(
                                             )) != -1) {
             player.addClip(fileName,pixelPosition);

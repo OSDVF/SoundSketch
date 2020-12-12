@@ -57,7 +57,7 @@ void AudioFile::openFileUrl(QString url){
     if(m_filePath == url)
         return;
 
-    m_filePath = QUrl(url).toLocalFile();
+    m_filePath = url;
     std::string stdStr = m_filePath.toStdString();
     const char* fname = stdStr.c_str();
     try

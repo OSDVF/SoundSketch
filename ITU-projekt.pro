@@ -1,4 +1,4 @@
-QT += quick multimedia widgets
+QT += quick multimedia widgets androidextras
 
 CONFIG += c++11
 
@@ -35,6 +35,7 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
 
 HEADERS += \
+    src/AndroidPathUtil.h \
     src/AudioFileWithWaveformMesh.h \
     src/WaveformGenerator.h \
     src/audiofile.h \
@@ -50,6 +51,7 @@ DISTFILES += \
     android/AndroidManifest.xml \
     android/build.gradle \
     android/res/values/libs.xml \
+    android/src/itu/project/PathUtil.java \
     images/backward.jpg \
     images/cut.jpg \
     images/del.jpg \
@@ -59,7 +61,7 @@ DISTFILES += \
 
 FORMS +=
 
-ANDROID_ABIS = armeabi-v7a arm64-v8a x86 x86_64
+ANDROID_ABIS = arm64-v8a
 
 ANDROID_PACKAGE_SOURCE_DIR = $$PWD/android
 

@@ -4,6 +4,7 @@
 #include "waveformplot.h"
 #include "audiofile.h"
 #include "cliplistmodel.h"
+#include "AndroidPathUtil.h"
 
 int main(int argc, char *argv[])
 {
@@ -15,13 +16,14 @@ int main(int argc, char *argv[])
     QQmlApplicationEngine engine;
     const QUrl url(QStringLiteral("qrc:/main.qml"));
     QObject::connect(&engine, &QQmlApplicationEngine::objectCreated,
-                     &app, [url](QObject *obj, const QUrl &objUrl) {
-        if (!obj && url == objUrl)
-            QCoreApplication::exit(-1);
-    }, Qt::QueuedConnection);
+        &app, [url](QObject *obj, const QUrl &objUrl) {
+            if (!obj && url == objUrl)
+                QCoreApplication::exit(-1);
+        }, Qt::QueuedConnection);
     qmlRegisterType<WaveformPlot>("itu.project.frontend", 1, 0, "WaveformPlot");
     qmlRegisterType<AudioFile>("itu.project.backend", 1, 0, "AudioFile");
     qmlRegisterType<ClipListModel>("itu.project.backend", 1, 0, "ClipListModel");
+    qmlRegisterType<AndroidPathUtil>("itu.project.backend", 1, 0, "AndroidPathUtil");
     qmlRegisterSingletonType(QUrl("qrc:///Style.qml"), "itu.project.frontend", 1, 0, "Style");
     engine.load(url);
 
