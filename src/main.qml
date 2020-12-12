@@ -373,7 +373,7 @@ ApplicationWindow
           background: Rectangle {
                implicitWidth: 40
                implicitHeight: 40
-               opacity: enabled ? 1 : 0.3
+               opacity: opendrawer.hovered ? 0.5 : 1
                color: "#BFE5D9"
                border.color: "gainsboro"
                radius: 10
