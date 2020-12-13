@@ -32,15 +32,15 @@ function reposition(list, index) {
         var leftItem = list.get(leftIndex);
         //Do or discard the position change
         overlapingItem = leftItem;
-        var overlapingDuration = overlapingItem.audioFile.durationMs;
-        var overlapingEnd = overlapingItem.posMs + overlapingItem.audioFile.durationMs;
+        var overlapingDuration = overlapingItem.audioFile.endMs - overlapingItem.audioFile.startMs;
+        var overlapingEnd = overlapingItem.posMs + overlapingDuration;
         if(newPos < overlapingEnd)//left edge is within boundf of another item
         {
             var leftItemShiftPos = newPos - overlapingDuration;
             if(leftIndex > 0)
             {
                 var lefterItem = list.get(leftIndex - 1);
-                if(lefterItem.posMs + lefterItem.audioFile.durationMs <= leftItemShiftPos )
+                if(lefterItem.posMs + lefterItem.audioFile.endMs - lefterItem.audioFile.startMs <= leftItemShiftPos )
                 {
                     console.log("Set left item pos to " << leftItemShiftPos);
                     leftItem.posMs = leftItemShiftPos;
@@ -63,15 +63,16 @@ function reposition(list, index) {
         //Do or discard the position change
         overlapingItem = rightItem;
         var overlapPos = overlapingItem.posMs;
-        var newEnd = thisItem.posMs + thisItem.audioFile.durationMs
+        var thisDuration = thisItem.audioFile.endMs - thisItem.audioFile.startMs
+        var newEnd = thisItem.posMs + thisDuration;
 
         if(newEnd > overlapPos)//right edge is within boundf of another item
         {
-            var rightItemShiftPos = newPos + thisItem.audioFile.durationMs;
+            var rightItemShiftPos = newPos + thisDuration;
             if(rightIndex < itemsCount - 1)
             {
                 var evenRighterItem = list.get(rightIndex + 1);
-                if(evenRighterItem.posMs >= rightItemShiftPos + evenRighterItem.audioFile.durationMs )
+                if(evenRighterItem.posMs >= rightItemShiftPos + evenRighterItem.audioFile.endMs - evenRighterItem.audioFile.startMs)
                 {
                     console.log( "Set right item pos to ", rightItemShiftPos);
                     rightItem.posMs = (rightItemShiftPos);

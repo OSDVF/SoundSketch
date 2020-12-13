@@ -24,7 +24,7 @@ function getCorrectPosForNewItem(posMs, duration, requestedIndex)
         if(clipList.count > 0)
         {
             var it = clipList.get(clipList.count -1);
-            var end = it.posMs + it.audioFile.durationMs;
+            var end = it.posMs - it.audioFile.startMs + it.audioFile.endMs;
             if(posMs < end)
             {
                 return end;
@@ -37,13 +37,13 @@ function getCorrectPosForNewItem(posMs, duration, requestedIndex)
     {
         var currentItem = clipList.get(i);
         var newItemEnd = lastFreePos + duration;
-        var currentEnd = currentItem.posMs + currentItem.audioFile.durationMs;
+        var currentEnd = currentItem.posMs - currentItem.audioFile.startMs + currentItem.audioFile.endMs;
         if(lastFreePos < currentItem.posMs && newItemEnd < currentEnd)//Find the item before which it will be placed
         {
             if (i - 1 >= 0)//If we are positioning not the first item
             {
                 var prevItem = clipList.get(i - 1);
-                var prevEnd = prevItem.posMs + prevItem.audioFile.durationMs;
+                var prevEnd = prevEnd.posMs - prevEnd.audioFile.startMs + prevEnd.audioFile.endMs;
                 if (prevEnd >= lastFreePos)//Sync with previous item
                 {
                     lastFreePos = prevEnd;
@@ -55,7 +55,7 @@ function getCorrectPosForNewItem(posMs, duration, requestedIndex)
                 var nextItem = clipList.get(i);
                 if (nextItem.posMs < newItemEnd && nextItem.posMs > lastFreePos)
                 {
-                    lastFreePos = nextItem.posMs + nextItem.audioFile.durationMs;
+                    lastFreePos = nextItem.posMs - nextItem.audioFile.startMs + nextItem.audioFile.endMs;
                     continue;
                 }
             }
@@ -80,7 +80,7 @@ function getIndexForNewItem(posMs, duration)
             if(i - 1 >= 0 )//If we are iterating not the first item
             {
                 var prevItem = clipList.get(i - 1);
-                if(prevItem.posMs + prevItem.audioFile.durationMs + duration >= clipList.get(i).posMs)//If newly added item at this position would overlap the next item
+                if(prevItem.posMs + prevItem.audioFile.endMs - prevItem.audioFile.startMs + duration >= clipList.get(i).posMs)//If newly added item at this position would overlap the next item
                 {
                     continue;
                 }
@@ -105,7 +105,7 @@ function getIndexOfItemAtPos(posMs)
     for(var i =0; i<clipList.count; i++)
     {
         var item = clipList.get(i)
-        var endMs = item.posMs + item.audioFile.durationMs;
+        var endMs = item.posMs + item.audioFile.endMs - item.audioFile.startMs;
         if(posMs >= item.posMs && posMs <= endMs)
         {
             return i;
