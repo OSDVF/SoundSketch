@@ -17,7 +17,7 @@ Popup {
                     implicitWidth: 100
                     implicitHeight: 40
                     color:  "white"
-                    border.color: "gainsboro"
+                    border.color: "black"
                     border.width: 1
                     radius: 4
                 }
@@ -66,12 +66,14 @@ Popup {
             onHoveredChanged:  hovered ? outputButton.opacity = 0.7 : outputButton.opacity = 1;
             onClicked: saveDialog.open()
             background: Rectangle {
+                id: outputstyle
                         implicitWidth: 100
                         implicitHeight: 40
                         color: button.down ? "#d6d6d6" : "#BFE5D9"
                         border.color: "gainsboro"
                         border.width: 1
                         radius: 4
+                        opacity: 0.3
                     }
         }
 
@@ -138,6 +140,7 @@ Popup {
                     recordButton.text = qsTr("Record")
                     red_dot.visible = false
                 }
+                outputstyle.opacity = 1;
             }
             background: Rectangle {
                         implicitWidth: 100
@@ -175,6 +178,7 @@ Popup {
                 startTime = 0
                 time.text = ""
                 audiorecorder.visible = false
+                outputButton.opacity = 0.5;
             }
             onHoveredChanged:  hovered ? close.opacity = 0.7 : close.opacity = 1;
             background: Rectangle {
