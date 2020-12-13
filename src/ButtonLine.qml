@@ -9,9 +9,10 @@ Rectangle{
 
     signal play()
     signal pause()
-    signal del()
     signal jumpend()
     signal jumpbeg()
+    signal cut()
+    signal del()
     signal addNote(var noteText)
     function restoreLastNote()
     {
@@ -146,7 +147,7 @@ Rectangle{
                       radius: 10
                   }
           onHoveredChanged:  hovered ? cut.opacity = 0.7 : cut.opacity = 1;
-
+          onClicked: control.cut()
     }
 
     Button

@@ -80,6 +80,25 @@ Rectangle
         return "";
     }
 
+    function cut_into_2_pieces()
+    {
+        var index = CList.getIndexOfItemAtPos(pos_ms);
+        if(index === -1)
+        {
+            return;
+        }
+        var cut_offset = pos_ms - clipList.get(index).posMs;
+
+        clipList.get(index).audioFile.endMs = cut_offset - 1 + clipList.get(index).audioFile.startMs;
+        addClipAtPos(clipList.get(index).audioFile.fileUrl, pos_ms);
+        var index_new = CList.getIndexOfItemAtPos(pos_ms + 1);
+
+        console.log(index);
+        console.log(index_new);
+
+        clipList.get(index_new).audioFile.startMs = cut_offset;
+    }
+
     function play()
     {
         player_backend.audio_pos_from_start = pos_ms
