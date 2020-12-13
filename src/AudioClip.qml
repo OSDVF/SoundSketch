@@ -95,6 +95,78 @@ Rectangle {
         }
     }
 
+    Image {
+        id: leftHandle
+        opacity: positioning ? 0.682 : 0.3
+        x: 5
+        anchors.top: parent.top
+        source: "images/handle.png"
+        anchors.topMargin: 34
+        sourceSize.width: 35
+        visible: selected
+        property bool positioning: false
+
+        MouseArea {
+            anchors.fill: parent
+            onPressed: {
+                leftHandle.positioning = true
+            }
+            onMouseXChanged:
+            {
+                if(leftHandle.positioning)
+                {
+                    resizeOverlay.x = 0
+                    resizeOverlay.width = mouse.x
+                    resizeOverlay.visible = true
+                }
+            }
+            onReleased: {
+                leftHandle.positioning = false
+                resizeOverlay.visible = false
+
+                audioFile.startMs = Math.max(audioFile.startMs + resizeOverlay.width / scaleMs, 0)
+            }
+        }
+    }
+
+    Image {
+        id: rightHandle
+        opacity: positioning ? 0.682 : 0.3
+        anchors.right: parent.right
+        anchors.top: parent.top
+        source: "images/handle.png"
+        anchors.topMargin: 34
+        anchors.rightMargin: -30
+        sourceSize.width: 35
+
+        transform: Scale{ xScale: -1 }
+        visible: selected
+        property bool positioning: false
+
+        MouseArea {
+            anchors.fill: parent
+            onPressed: {
+                rightHandle.positioning = true
+            }
+            onMouseXChanged:
+            {
+                if(rightHandle.positioning)
+                {
+                    resizeOverlay.x = mainRect.width - mouse.x
+                    resizeOverlay.width = mainRect.width - resizeOverlay.x
+                    resizeOverlay.visible = true
+                }
+            }
+            onReleased: {
+                rightHandle.positioning = false
+                resizeOverlay.visible = false
+
+                audioFile.endMs = Math.min(audioFile.endMs - resizeOverlay.width / scaleMs, audioFile.durationMs)
+            }
+        }
+    }
+
+
     Flickable {
         anchors.fill: parent
         anchors.bottomMargin: 5
@@ -150,6 +222,14 @@ Rectangle {
             }
 
         }
+    }
+
+    Rectangle {
+        id: resizeOverlay
+        opacity: 0.5
+        visible: false
+        anchors.top: parent.top
+        anchors.bottom: parent.bottom
     }
 
 

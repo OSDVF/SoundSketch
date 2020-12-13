@@ -1,6 +1,5 @@
 import QtQuick 2.0
-import QtQuick.Dialogs 1.3
-import QtQuick.Controls 2.0
+import QtQuick.Controls 2.12
 import itu.project.backend 1.0
 import QtQml.Models 2.15
 import "ClipReposition.js" as Rep;
@@ -309,7 +308,7 @@ Rectangle
                             scaleMs: timeline.scale_ms
                             anchors.top: parent.top
                             anchors.bottom: parent.bottom
-                            peaceTimeWidth: durationMs * timeline.scale_ms
+                            peaceTimeWidth: (model.audioFile.endMs - model.audioFile.startMs) * timeline.scale_ms
                             debugText: index.toString()
                             selected: selectedClipIndex === index
                             backColor: Style.backColors[Math.max(index,0) % Style.backColors.length]
@@ -368,14 +367,16 @@ Rectangle
         }
     }
 
-    MessageDialog
+    Dialog
     {
         id: nothingSelectedDialog
+        anchors.centerIn: parent
         visible: false
         title: qsTr("Select something")
-        text: qsTr("There is no audio clip at playhead position")
+        Text {
+            text: qsTr("There is no audio clip at playhead position")
+        }
         standardButtons: StandardButton.Close
-        icon: StandardIcon.Warning
-        modality: Qt.ApplicationModal
+        modal: true
     }
 }

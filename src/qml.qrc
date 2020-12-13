@@ -22,5 +22,6 @@
         <file>ClipReposition.js</file>
         <file>ClipList.js</file>
         <file>images/pause.png</file>
+        <file>images/handle.png</file>
     </qresource>
 </RCC>

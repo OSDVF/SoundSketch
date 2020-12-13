@@ -41,6 +41,8 @@ protected:
 signals:
     void colorsChanged();
     void audioFileChanged();
+private slots:
+    void trimChanged();
 
 private:
     AudioFile * m_audioFile = nullptr;
