@@ -160,14 +160,23 @@ ApplicationWindow
                                             )) != -1) {
             player.addClip(fileName,pixelPosition);
         } else {
-            formatDialog.visible = true
+            delay(100,() => formatDialog.visible = true )
         }
     }
-
-    function delay(delayTime) {
-        timer = new Timer();
-        timer.interval = delayTime;
+    Timer
+    {
+        id: timer
+    }
+    function delay(time_ms, callback)
+    {
+        timer.interval = time_ms;
         timer.repeat = false;
+        timer.triggered.connect(callback);
+        timer.triggered.connect(function release ()
+        {
+            timer.triggered.disconnect(callback);
+            timer.triggered.disconnect(release);
+        });
         timer.start();
     }
 
@@ -198,24 +207,6 @@ ApplicationWindow
             verticalAlignment: Text.AlignVCenter
         }
 
-        MessageDialog
-        {
-            id: formatDialog
-            visible: false
-            title: qsTr("Unsupported file foramt.")
-            text:
-            {
-                var mess = qsTr("Supported formats are: ")
-                for (var i = 0; i < supportedExtensions.length - 1; i++)
-                {
-                    mess += supportedExtensions[i] + ", "
-                }
-                mess += supportedExtensions[supportedExtensions.length - 1] + "."
-            }
-            standardButtons: StandardButton.Close
-            icon: StandardIcon.Warning
-            modality: Qt.ApplicationModal
-        }
         ButtonLine
         {
             id: buttonline
@@ -323,6 +314,28 @@ You can also open an existing project, in Project->Open."
         buttonline.stop.connect(player.stop);
         buttonline.jumpend.connect(player.jumpend);
         buttonline.jumpbeg.connect(player.jumpbeg);
+    }
+
+
+    Dialog
+    {
+        anchors.centerIn: parent
+        id: formatDialog
+        visible: false
+        title: qsTr("Unsupported file format.")
+        Text
+        {
+            text:{
+            var mess = qsTr("Supported formats are: ")
+            for (var i = 0; i < supportedExtensions.length - 1; i++)
+            {
+                mess += supportedExtensions[i] + ", "
+            }
+            mess += supportedExtensions[supportedExtensions.length - 1] + "."
+            }
+        }
+        standardButtons: StandardButton.Close
+        modal: true
     }
 
 }
