@@ -86,9 +86,9 @@ Rectangle
         var index = CList.getIndexOfItemAtPos(pos_ms);
         if(index === -1)
         {
-            time_offset_slider.value += 10;// * timeline.unit_scale;
+            time_offset_slider.value += 100;// * timeline.unit_scale;
             timeline.redraw();
-            delay(10, function()
+            delay(100, function()
             {
                 play();
             });
@@ -101,6 +101,7 @@ Rectangle
 
     function stop()
     {
+        timer.stop();
         player_backend.stop();
     }
 
@@ -190,7 +191,7 @@ Rectangle
                         timeline.scale_s = sc;
                         timeline.redraw();
                     }
-                    else if(sc <= timeline.scale_s_min && timeline.unit == 10)
+                    else if(sc <= timeline.scale_s_min && timeline.unit_scale == 1.0)
                     {
                         timeline.unit = 2;
                         timeline.unit_scale = 10.0;
@@ -198,7 +199,7 @@ Rectangle
                         timeline.scale_s = timeline.scale_s_max;
                         timeline.redraw();
                     }
-                    else if(sc <= timeline.scale_s_min && timeline.unit == 2)
+                    else if(sc <= timeline.scale_s_min && timeline.unit_scale == 10.0)
                     {
                         timeline.unit = 5;
                         timeline.unit_scale = 60.0;
@@ -206,7 +207,7 @@ Rectangle
                         timeline.scale_s = 240;
                         timeline.redraw();
                     }
-                    else if(sc > 96 && timeline.unit == 5)
+                    else if(sc > 96 && timeline.unit_scale == 60.0)
                     {
                         timeline.unit = 2;
                         timeline.unit_scale = 10.0;
@@ -214,7 +215,7 @@ Rectangle
                         timeline.scale_s = 72;
                         timeline.redraw();
                     }
-                    else if(sc > timeline.scale_s_max && timeline.unit == 2)
+                    else if(sc > timeline.scale_s_max && timeline.unit_scale == 10.0)
                     {
                         timeline.unit = 10;
                         timeline.unit_scale = 1.0;
@@ -337,7 +338,7 @@ Rectangle
         }
         onDone:
         {
-            time_offset_slider.value += 10;
+            time_offset_slider.value += 100;
             control.play();
         }
     }
