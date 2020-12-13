@@ -96,7 +96,7 @@ Rectangle {
 
             Rectangle {
                 x: notePos * scaleMs
-                y: index * (font.pixelSize + 10)
+                y: (index+1) * (font.pixelSize + 15)
                 radius: textRectRadius
                 width: childrenRect.width + 10
                 height: childrenRect.height + 10
