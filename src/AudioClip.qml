@@ -80,7 +80,15 @@ Rectangle {
                     text: audioFile.format
                 }
                 Text {
+                    text: {
+                        var sec = audioFile.durationMs/1000
+                        var mins = Math.floor(sec/60)
+                        return mins + ":" + sec
+                    }
+                }
+                Text {
                     text: debugText
+                    visible:false
                 }
             }
         }

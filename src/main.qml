@@ -202,7 +202,12 @@ ApplicationWindow
             id: txt
             width: parent.width
             height: parent.height*0.2
-            text: player.pos_ms
+            text: {
+                var sec = player.pos_ms/1000
+                var mins = Math.floor(sec/60)
+                return mins + ":" + sec
+            }
+
             horizontalAlignment: Text.AlignHCenter
             verticalAlignment: Text.AlignVCenter
         }
