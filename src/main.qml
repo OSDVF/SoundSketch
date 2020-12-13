@@ -55,30 +55,8 @@ ApplicationWindow
         id: menu
         width: mainWindow.width * 0.3
         height: mainWindow.height
-        Button{
-            id: returnbutton
-            y: 0
-            x: 0
-            width: menu.width
-            height: 40
-            icon.source: "images/return.jpg"
-            visible: true
-            onClicked: {
-                helpmenu.visible = false;
-                editmenu.visible = false;
-                projectmenu.visible = false;
-            }
-            background: Rectangle {
-                id: returnstyle
-                color:  "#BFE5D9"
-                opacity: returnbutton.pressed? 0.7 : 1
-                border.color: "gainsboro"
-                radius: 7
-            }
-        }
         Rectangle{
             id: mainmenu
-            y: 40
             width: menu.width
             height: menu.height
 
@@ -138,6 +116,27 @@ ApplicationWindow
                     border.color: "gainsboro"
                     radius: 7
                 }
+            }
+        }
+        Button{
+            id: returnbutton
+            y: 0
+            x: 0
+            width: menu.width
+            height: 40
+            icon.source: "images/return.jpg"
+            visible: helpmenu.visible | editmenu.visible | projectmenu.visible
+            onClicked: {
+                helpmenu.visible = false;
+                editmenu.visible = false;
+                projectmenu.visible = false;
+            }
+            background: Rectangle {
+                id: returnstyle
+                color:  "#BFE5D9"
+                opacity: returnbutton.pressed? 0.7 : 1
+                border.color: "gainsboro"
+                radius: 7
             }
         }
         Rectangle{
