@@ -16,7 +16,7 @@ ApplicationWindow
     width: 1000
     height: 480
     visible: true
-    title: qsTr("Hello World")
+    title: qsTr("ITU Sound Sketch")
 
     menuBar: MenuBar {
         background: Rectangle {
@@ -37,7 +37,7 @@ ApplicationWindow
             id: dialog
             x: mainWindow.width / 2 - dialog.width/2
             y: mainWindow.height / 2 - dialog.height/2
-            title: "Title"
+            title: "Saved"
             standardButtons: Dialog.Ok
             visible: false
             Image {
