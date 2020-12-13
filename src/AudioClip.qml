@@ -108,9 +108,9 @@ Rectangle {
                 x: notePos * scaleMs
                 y: (index+1) * (font.pixelSize + 15)
                 radius: textRectRadius
-                width: childrenRect.width + 10
-                height: childrenRect.height + 10
-                color: notearea.containsMouse? "red" : "#75e7e5ca"
+                width: notetextarea.width + 10
+                height: notetextarea.height + 10
+                color: notearea.containsMouse? "salmon" : "#75e7e5ca"
                 Text {
                     id: notetextarea
                     x: 5
@@ -124,8 +124,18 @@ Rectangle {
                     hoverEnabled: true
                     //onHoveredChanged:  hovered ? notebox.color = "red" : notebox.color = "#75e7e5ca";
                 }
-
+                Button{
+                    id: deleteButton
+                    x: notetextarea.x + notebox.width
+                    y: notetextarea.y - 5
+                    width: 20
+                    height: notebox.height
+                    visible: notearea.containsMouse? true : false
+                    background: Rectangle{color: "salmon"; radius: notebox.radius}
+                    text:  "X"
+                }
             }
+
         }
     }
 
