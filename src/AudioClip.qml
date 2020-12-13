@@ -49,51 +49,117 @@ Rectangle {
     ListModel {
         id: notesModel
     }
-    WaveformPlot {
-        id: plot
-        anchors.fill: parent
-        rmsColor: Qt.darker(waveColor)
-        peakColor: waveColor
-        audioFile: mainRect.audioFile
-        Rectangle {
-            color: textBackColor
-            radius: textRectRadius
-            border.width: 0
+
+    Rectangle {
+        color: textBackColor
+        radius: textRectRadius
+        border.width: 0
+        anchors.left: parent.left
+        anchors.top: parent.top
+        anchors.leftMargin: 5
+        anchors.topMargin: 5
+        width: childrenRect.width + 10
+        height: childrenRect.height + 10
+        RowLayout {
             anchors.left: parent.left
             anchors.top: parent.top
             anchors.leftMargin: 5
             anchors.topMargin: 5
-            width: childrenRect.width + 10
-            height: childrenRect.height + 10
-            RowLayout {
-                anchors.left: parent.left
-                anchors.top: parent.top
-                anchors.leftMargin: 5
-                anchors.topMargin: 5
-                spacing: 10
-                Text {
-                    text: audioFile.baseName
-                    color: "white"
+            spacing: 10
+            Text {
+                text: audioFile.baseName
+                color: "white"
+            }
+            Text {
+                id: formatLabel
+                color: formatInfoTextColor
+                text: audioFile.format
+            }
+            Text {
+                text: {
+                    var sec = audioFile.durationMs/1000
+                    var mins = Math.floor(sec/60)
+                    return mins + ":" + sec
                 }
-                Text {
-                    id: formatLabel
-                    color: formatInfoTextColor
-                    text: audioFile.format
-                }
-                Text {
-                    text: {
-                        var sec = audioFile.durationMs/1000
-                        var mins = Math.floor(sec/60)
-                        return mins + ":" + sec
-                    }
-                }
-                Text {
-                    text: debugText
-                    visible:false
-                }
+            }
+            Text {
+                text: debugText
+                visible:false
             }
         }
     }
+
+    Image {
+        id: leftHandle
+        opacity: positioning ? 0.682 : 0.3
+        x: 5
+        anchors.top: parent.top
+        source: "images/handle.png"
+        anchors.topMargin: 34
+        sourceSize.width: 35
+        visible: selected
+        property bool positioning: false
+
+        MouseArea {
+            anchors.fill: parent
+            onPressed: {
+                leftHandle.positioning = true
+            }
+            onMouseXChanged:
+            {
+                if(leftHandle.positioning)
+                {
+                    resizeOverlay.x = 0
+                    resizeOverlay.width = mouse.x
+                    resizeOverlay.visible = true
+                }
+            }
+            onReleased: {
+                leftHandle.positioning = false
+                resizeOverlay.visible = false
+
+                audioFile.startMs = Math.max(audioFile.startMs + resizeOverlay.width / scaleMs, 0)
+            }
+        }
+    }
+
+    Image {
+        id: rightHandle
+        opacity: positioning ? 0.682 : 0.3
+        anchors.right: parent.right
+        anchors.top: parent.top
+        source: "images/handle.png"
+        anchors.topMargin: 34
+        anchors.rightMargin: -30
+        sourceSize.width: 35
+
+        transform: Scale{ xScale: -1 }
+        visible: selected
+        property bool positioning: false
+
+        MouseArea {
+            anchors.fill: parent
+            onPressed: {
+                rightHandle.positioning = true
+            }
+            onMouseXChanged:
+            {
+                if(rightHandle.positioning)
+                {
+                    resizeOverlay.x = mainRect.width - mouse.x
+                    resizeOverlay.width = mainRect.width - resizeOverlay.x
+                    resizeOverlay.visible = true
+                }
+            }
+            onReleased: {
+                rightHandle.positioning = false
+                resizeOverlay.visible = false
+
+                audioFile.endMs = Math.min(audioFile.endMs - resizeOverlay.width / scaleMs, audioFile.durationMs)
+            }
+        }
+    }
+
 
     Flickable {
         anchors.fill: parent
@@ -151,6 +217,15 @@ Rectangle {
             }
         }
     }
+
+    Rectangle {
+        id: resizeOverlay
+        opacity: 0.5
+        visible: false
+        anchors.top: parent.top
+        anchors.bottom: parent.bottom
+    }
+
 
     Text {
         id: errorText

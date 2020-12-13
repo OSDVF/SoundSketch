@@ -1,6 +1,5 @@
 import QtQuick 2.0
-import QtQuick.Dialogs 1.3
-import QtQuick.Controls 2.0
+import QtQuick.Controls 2.12
 import itu.project.backend 1.0
 import QtQml.Models 2.15
 import "ClipReposition.js" as Rep;
@@ -83,7 +82,7 @@ Rectangle
 
     function play()
     {
-        player_backend.audio_pos_from_start = pos_ms - player_backend.audio_pos_from_start
+        player_backend.audio_pos_from_start = pos_ms
         player_backend.play();
     }
 
@@ -298,7 +297,7 @@ Rectangle
                             scaleMs: timeline.scale_ms
                             anchors.top: parent.top
                             anchors.bottom: parent.bottom
-                            width: durationMs * timeline.scale_ms
+                            width: (model.audioFile.endMs - model.audioFile.startMs) * timeline.scale_ms
                             debugText: index.toString()
                             selected: selectedClipIndex === index
                             backColor: Style.backColors[Math.max(index,0) % Style.backColors.length]
@@ -321,9 +320,12 @@ Rectangle
         id: player_backend
         onSet_pos_ms:
         {
-            var value = player_backend.audio_pos_from_start + pos_ms;
-            value -= timeline.width_ms * timeline.value;
+            var value = player_backend.audio_pos_from_start;
             time_offset_slider.value = value;
+            if(value === time_offset_slider.to)
+            {
+                player_backend.stop()
+            }
         }
         onDone:
         {
@@ -356,14 +358,16 @@ Rectangle
         }
     }
 
-    MessageDialog
+    Dialog
     {
         id: nothingSelectedDialog
+        anchors.centerIn: parent
         visible: false
         title: qsTr("Select something")
-        text: qsTr("There is no audio clip at playhead position")
+        Text {
+            text: qsTr("There is no audio clip at playhead position")
+        }
         standardButtons: StandardButton.Close
-        icon: StandardIcon.Warning
-        modality: Qt.ApplicationModal
+        modal: true
     }
 }

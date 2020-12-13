@@ -14,6 +14,8 @@ class AudioFile : public QObject
     Q_OBJECT
     Q_PROPERTY(QString fileUrl READ fileUrl WRITE openFileUrl NOTIFY fileUrlChanged)
     Q_PROPERTY(qreal durationMs READ durationMs NOTIFY fileUrlChanged STORED false)
+    Q_PROPERTY(qreal startMs READ startMs WRITE setStart NOTIFY startMsChanged)
+    Q_PROPERTY(qreal endMs READ endMs WRITE setEnd NOTIFY endMsChanged)
     Q_PROPERTY(qreal bitrate READ bitrate NOTIFY fileUrlChanged STORED false)
     Q_PROPERTY(QString baseName READ baseName NOTIFY fileUrlChanged STORED false)
     Q_PROPERTY(QString format READ format NOTIFY fileUrlChanged STORED false)
@@ -30,7 +32,11 @@ public:
     explicit AudioFile(QObject *parent = nullptr);
     Q_INVOKABLE AudioFile *create(QString fileUrl);
 
-    qreal durationMs();
+    qreal durationMs() const;
+    qreal startMs() const;
+    qreal endMs() const;
+    void setStart(qreal start);
+    void setEnd(qreal end);
     int frameCount();
     int streamId();
     int streamIndex();
@@ -46,11 +52,15 @@ public:
 signals:
     void fileUrlChanged();
     void exceptionChanged();
+    void startMsChanged();
+    void endMsChanged();
 private:
     QString m_filePath;
     QString m_format;
     QString m_baseName;
-    qreal m_duration = 5000;
+    qreal m_duration = 7000;
+    qreal m_start = 0;
+    qreal m_end = 0;
     int m_frames = 0;
     qreal m_bitrate = 0;
     int m_audioStreamId = 0;

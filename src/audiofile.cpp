@@ -16,10 +16,37 @@ AudioFile* AudioFile::create(QString fileUrl)
     return newFile;
 }
 
+qreal AudioFile::startMs() const
+{
+    return m_start;
+}
+
+qreal AudioFile::endMs() const
+{
+    return m_end;
+}
+
+void AudioFile::setStart(qreal start)
+{
+    if(start == m_start)
+        return;
+
+    m_start = start;
+    emit startMsChanged();
+}
+
+void AudioFile::setEnd(qreal end)
+{
+    if(end == m_end)
+        return;
+    m_end = end;
+    emit endMsChanged();
+}
+
 QString AudioFile::fileUrl(){
     return m_filePath;
 }
-qreal AudioFile::durationMs()
+qreal AudioFile::durationMs() const
 {
     return m_duration;
 }
@@ -72,8 +99,13 @@ void AudioFile::openFileUrl(QString url){
     
     dotPos -= baseNamePos;
     m_baseName = m_filePath.mid(baseNamePos, dotPos);
+    
+    m_start = 0;
+    m_end = m_duration;
 
     emit fileUrlChanged();
+    emit endMsChanged();
+    emit startMsChanged();
 }
 
 void AudioFile::clearException()

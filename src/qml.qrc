@@ -23,5 +23,7 @@
         <file>ClipList.js</file>
         <file>images/play.png</file>
         <file>images/record.jpg</file>
+        <file>images/pause.png</file>
+        <file>images/handle.png</file>
     </qresource>
 </RCC>

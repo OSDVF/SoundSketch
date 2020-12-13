@@ -73,8 +73,12 @@ void WaveformPlot::createWaveformMesh(QSGGeometry *peaksGeometry,QSGGeometry *rm
     auto rmsVertieces = rmsGeometry->vertexDataAsPoint2D();
     auto& samples = m_audioFile->waveformBuffer;
     auto data = samples.constData();
+    auto dur = m_audioFile->durationMs();
+    qreal oneSampleDuration = dur / samples.size();
     float zeroY = height/2;
-    auto samplesCount = samples.size();
+    int skippedSamples = (m_audioFile->startMs()/oneSampleDuration);
+    auto samplesCount = samples.size() - skippedSamples - ((dur - m_audioFile->endMs())/oneSampleDuration);
+
     auto samplesPerPixel = (samplesCount/width);
     int maxVerticeIndex = width * 2;
 
@@ -88,7 +92,7 @@ void WaveformPlot::createWaveformMesh(QSGGeometry *peaksGeometry,QSGGeometry *rm
         float meanSample = 0;
         for(int s = minIndex;s<maxIndex;s++)
         {
-            auto singleSample = data[s];
+            auto singleSample = data[skippedSamples+ s];
             if(singleSample>maxSample) maxSample = singleSample;
             meanSample += singleSample*singleSample;
         }
@@ -229,6 +233,11 @@ void WaveformPlot::connectToFile(AudioFile* file)
 {
     if(file == m_audioFile)
         return;
+    if(m_audioFile != nullptr)
+    {
+        disconnect(m_audioFile, SIGNAL(startMsChanged()), this, SLOT(trimChanged()));
+        disconnect(m_audioFile, SIGNAL(endMsChanged()), this, SLOT(trimChanged()));
+    }
 
     if((m_audioFile = dynamic_cast<AudioFileWithWaveformMesh *>(file) )!= nullptr)
     {
@@ -244,7 +253,14 @@ void WaveformPlot::connectToFile(AudioFile* file)
     {
         m_audioFile->loadWaveform();
     }
-
+    connect(m_audioFile, SIGNAL(startMsChanged()), this, SLOT(trimChanged()));
+    connect(m_audioFile, SIGNAL(endMsChanged()), this, SLOT(trimChanged()));
     emit audioFileChanged();
+    update();
+}
+
+void WaveformPlot::trimChanged()
+{
+    m_geometryChanged = true;
     update();
 }
