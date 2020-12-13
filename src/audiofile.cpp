@@ -67,7 +67,11 @@ void AudioFile::openFileUrl(QString url){
     m_filePath = url;
     m_duration = 5000;
     auto baseNamePos = m_filePath.lastIndexOf('/')+1;
-    m_baseName = m_filePath.mid(baseNamePos);
+    int dotPos = m_filePath.lastIndexOf('.');
+    m_format = m_filePath.mid(dotPos+1);
+    
+    dotPos -= baseNamePos;
+    m_baseName = m_filePath.mid(baseNamePos, dotPos);
 
     emit fileUrlChanged();
 }
