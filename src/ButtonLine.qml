@@ -38,9 +38,8 @@ Rectangle{
                 }
         icon.color: "transparent"
         icon.source: "images/record.jpg"
-        onHoveredChanged:  hovered ? button.opacity = 0.7 : button.opacity = 1;
         onClicked: audiorecorder.visible = true
-        onHoveredChanged:  hovered ? opacity = 0.7 : opacity = 1;
+        onHoveredChanged: hovered ? opacity = 0.7 : opacity = 1;
         Audiorecorder{
             id: audiorecorder
             opacity: 1
@@ -93,7 +92,7 @@ Rectangle{
           }
           y: 0
           icon.color: "transparent"
-          icon.source: isPlaying? "images/pause.png" : "images/play.jpg"
+          icon.source: isPlaying? "images/pause.png" : "images/play.png"
           width: control.width
           height: control.height * 0.3
           background: Rectangle {

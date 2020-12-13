@@ -43,8 +43,6 @@ HEADERS += \
     src/WaveformGenerator.h \
     src/audiofile.h \
     src/audiolvel.h \
-    src/clipitemmodel.h \
-    src/cliplistmodel.h \
     src/player.h \
     src/waveformplot.h
 
@@ -54,6 +52,10 @@ DEPENDPATH += $$PWD/include
 DISTFILES += \
     android/AndroidManifest.xml \
     android/build.gradle \
+    android/res/drawable-hdpi/icon.png \
+    android/res/drawable-ldpi/icon.png \
+    android/res/drawable-mdpi/icon.png \
+    android/res/drawable/icon.png \
     android/res/values/libs.xml \
     android/src/itu/project/PathUtil.java \
     images/backward.jpg \
