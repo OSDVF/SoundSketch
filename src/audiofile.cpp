@@ -77,7 +77,8 @@ void AudioFile::openFileUrl(QString url){
         m_bitrate = info.bitRate;
 
         auto baseNamePos = m_filePath.lastIndexOf('/')+1;
-        m_baseName = m_filePath.mid(baseNamePos);
+        int dotPos = m_filePath.lastIndexOf('.') - baseNamePos;
+        m_baseName = m_filePath.mid(baseNamePos, dotPos);
         m_format = QString(info.format->name);
 
         //Stream info extraction
