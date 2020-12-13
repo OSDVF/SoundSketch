@@ -38,6 +38,7 @@ Rectangle{
                 }
         icon.color: "transparent"
         icon.source: "images/record.jpg"
+        onHoveredChanged:  hovered ? button.opacity = 0.7 : button.opacity = 1;
         onClicked: audiorecorder.visible = true
         onHoveredChanged:  hovered ? opacity = 0.7 : opacity = 1;
         Audiorecorder{

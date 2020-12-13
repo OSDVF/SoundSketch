@@ -26,14 +26,14 @@ Rectangle
 
     function addClip(fileUrl, pixelOffset) {
         //Set new clip properties
-        //dropbox.visible = false
+        dropbox.visible = false
         CList.appendClip(pixelOffset / timeline.scale_ms + timeline.offset_ms, fileUrl)
     }
 
     function addClipAtPos(fileUrl, msPos) {
         //Set new clip properties
-        //dropbox.visible = false
         CList.appendClip(msPos, fileUrl)
+        dropbox.visible = false
     }
 
     function addNoteAtHandlePos(text)
@@ -142,19 +142,28 @@ Rectangle
     Rectangle
     {
         id: stopy
-
         x: timeline.content_x
         y: timeline.content_y
         width: timeline.content_width + 1
         height: time_offset_slider.y - y
 
         color: Style.timelineColor
+        Image{
+            id: dropbox
+            x: stopy.width/2 - dropbox.width/2
+            y: (parent.height - dropbox.height) / 2
+            source: "images/dropbox.png"
+            height: parent.height/1.3
+            width: dropbox.height
+            opacity: 0.2
+            visible: true
+        }
 
         DropArea //For inserting audio files
         {
             anchors.fill: parent
             id: dropArea
-            onDropped: control.dropped(drop)
+            onDropped: { control.dropped(drop); dropbox.visible = false}
 
             MouseArea
             {
