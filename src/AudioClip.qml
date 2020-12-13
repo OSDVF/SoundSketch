@@ -2,6 +2,7 @@ import QtQuick 2.0
 import QtQuick.Layouts 1.15
 import itu.project.frontend 1.0
 import QtQml.Models 2.15
+import QtQuick.Controls 2.0
 
 Rectangle {
     id: mainRect
@@ -103,16 +104,49 @@ Rectangle {
             model: notesModel
 
             Rectangle {
+                property bool clicknum: true
+                id: notebox
                 x: notePos * scaleMs
                 y: (index+1) * (font.pixelSize + 15)
                 radius: textRectRadius
                 width: childrenRect.width + 10
-                height: childrenRect.height + 10
+                height: notetext.height + 10
                 color: "#75e7e5ca"
                 Text {
+                    id: notetext
                     x: 5
                     y: 5
                     text: noteText
+                }
+                MouseArea{
+                    id: notetextarea
+                    anchors.fill: notetext
+                    onClicked: {
+                        if (clicknum)
+                        {
+                            deleteButton.visible = true;
+                            notebox.color = "salmon";
+                            clicknum = false;
+                        }
+                        else
+                        {
+                            deleteButton.visible = false;
+                            notebox.color = "#75e7e5ca";
+                            clicknum = true;
+                        }
+                    }
+                }
+
+                Button{
+                    id: deleteButton
+                    x: notetext.x + notebox.width
+                    y: notetext.y - 5
+                    width: 20
+                    height: notebox.height
+                    visible: false
+                    background: Rectangle{color: "salmon"; radius: notebox.radius}
+                    text:  "X"
+                    onClicked: {notetext.text = ""; notebox.width = 0; notebox.height = 0}
                 }
             }
         }
