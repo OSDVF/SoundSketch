@@ -99,7 +99,10 @@ Rectangle
         player_backend.play(clipList.get(index).audioFile, pos_ms - player_backend.audio_pos_from_start);
     }
 
-
+    function stop()
+    {
+        player_backend.stop();
+    }
 
     function jumpbeg()
     {
@@ -355,7 +358,7 @@ Rectangle
         width: parent.width
         y: parent.height - height
         from: 0
-        to: Math.max(50000 - timeline.width_ms,totalDurationMs - timeline.width_ms)
+        to: Math.max(timeline.width_ms,totalDurationMs - timeline.width_ms)
         value: from
         onValueChanged:
         {

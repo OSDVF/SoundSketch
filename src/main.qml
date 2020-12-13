@@ -320,6 +320,7 @@ You can also open an existing project, in Project->Open."
     Component.onCompleted:
     {
         buttonline.play.connect(player.play);
+        buttonline.stop.connect(player.stop);
         buttonline.jumpend.connect(player.jumpend);
         buttonline.jumpbeg.connect(player.jumpbeg);
     }

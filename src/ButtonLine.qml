@@ -7,6 +7,7 @@ import QtQuick.Layouts 1.11
 Rectangle{
 
     signal play()
+    signal stop()
     signal jumpend()
     signal jumpbeg()
     signal del()
@@ -89,7 +90,7 @@ Rectangle{
               }
               else
               {
-                  //stop prehravania
+                  control.stop()
                   isPlaying = false
               }
           }
