@@ -110,7 +110,8 @@ Rectangle {
                 radius: textRectRadius
                 width: notetextarea.width + 10
                 height: notetextarea.height + 10
-                color: notearea.containsMouse? "salmon" : "#75e7e5ca"
+                color: "#75e7e5ca"
+                property bool clicknum: true
                 Text {
                     id: notetextarea
                     x: 5
@@ -120,9 +121,20 @@ Rectangle {
                 MouseArea{
                     id: notearea
                     anchors.fill: notebox
-                    onClicked: {notebox.width = 0; notebox.height = 0; notetextarea.text = "";}
-                    hoverEnabled: true
-                    //onHoveredChanged:  hovered ? notebox.color = "red" : notebox.color = "#75e7e5ca";
+                    onClicked: {
+                        if (clicknum)
+                        {
+                            deleteButton.visible = true;
+                            notebox.color = "salmon";
+                            clicknum = false
+                        }
+                        else
+                        {
+                            deleteButton.visible = false;
+                            notebox.color = "#75e7e5ca";
+                            clicknum = true
+                        }
+                    }
                 }
                 Button{
                     id: deleteButton
@@ -130,9 +142,10 @@ Rectangle {
                     y: notetextarea.y - 5
                     width: 20
                     height: notebox.height
-                    visible: notearea.containsMouse? true : false
+                    visible: false
                     background: Rectangle{color: "salmon"; radius: notebox.radius}
                     text:  "X"
+                    onClicked: {notebox.width = 0; notebox.height = 0; notetextarea.text = "";}
                 }
             }
 
