@@ -25,8 +25,9 @@ Slider
     readonly property int content_y: height
     readonly property alias content_width: timeline.width
 
-    readonly property int pos_ms: (offset_ms + width_ms*value)//*unit_scale
+    readonly property int pos_ms: (offset_ms + width_ms*value)
     readonly property int single_offset: ((timeline.offset_s == 1.0) ? 0 : (timeline.scale_s/unit * parseInt(timeline.offset_s*unit, 10)))
+    readonly property real start_s: (timeline.offset_s*unit) - parseInt(timeline.offset_s*unit, 10)
 
 
     background: Canvas
@@ -40,7 +41,7 @@ Slider
 
 
         readonly property int scale_s: control.scale_s
-        readonly property real offset_s: 1.0 - ((control.offset_ms%1000)/1000.0)/unit_scale
+        readonly property real offset_s: (1.0 - (((control.offset_ms/unit_scale)%1000)/1000.0))
 
         onPaint:
         {

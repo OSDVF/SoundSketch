@@ -89,6 +89,7 @@ Rectangle
 
     function pause()
     {
+        timer.stop()
         player_backend.stop()
     }
 
@@ -178,7 +179,7 @@ Rectangle
                         timeline.scale_s = sc;
                         timeline.redraw();
                     }
-                    else if(sc <= timeline.scale_s_min && timeline.unit == 10)
+                    else if(sc <= timeline.scale_s_min && timeline.unit_scale == 1.0)
                     {
                         timeline.unit = 2;
                         timeline.unit_scale = 10.0;
@@ -186,7 +187,7 @@ Rectangle
                         timeline.scale_s = timeline.scale_s_max;
                         timeline.redraw();
                     }
-                    else if(sc <= timeline.scale_s_min && timeline.unit == 2)
+                    else if(sc <= timeline.scale_s_min && timeline.unit_scale == 10.0)
                     {
                         timeline.unit = 5;
                         timeline.unit_scale = 60.0;
@@ -194,7 +195,7 @@ Rectangle
                         timeline.scale_s = 240;
                         timeline.redraw();
                     }
-                    else if(sc > 96 && timeline.unit == 5)
+                    else if(sc > 96 && timeline.unit_scale == 60.0)
                     {
                         timeline.unit = 2;
                         timeline.unit_scale = 10.0;
@@ -202,7 +203,7 @@ Rectangle
                         timeline.scale_s = 72;
                         timeline.redraw();
                     }
-                    else if(sc > timeline.scale_s_max && timeline.unit == 2)
+                    else if(sc > timeline.scale_s_max && timeline.unit_scale == 10.0)
                     {
                         timeline.unit = 10;
                         timeline.unit_scale = 1.0;
@@ -322,11 +323,11 @@ Rectangle
         {
             var value = player_backend.audio_pos_from_start + pos_ms;
             value -= timeline.width_ms * timeline.value;
-            time_offset_slider.value = value;// / timeline.unit_scale;
+            time_offset_slider.value = value;
         }
         onDone:
         {
-            time_offset_slider.value += 10;
+            time_offset_slider.value += 100;
             control.play();
         }
     }
@@ -346,11 +347,11 @@ Rectangle
         width: parent.width
         y: parent.height - height
         from: 0
-        to: Math.max(50000 - timeline.width_ms,totalDurationMs - timeline.width_ms)
+        to: Math.max(timeline.width_ms,totalDurationMs - timeline.width_ms)
         value: from
         onValueChanged:
         {
-            timeline.offset_ms = parseInt(value, 10);// * timeline.unit_scale;
+            timeline.offset_ms = parseInt(value, 10);
             timeline.redraw();
         }
     }
