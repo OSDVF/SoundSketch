@@ -2,6 +2,7 @@ import QtQuick 2.0
 import QtQuick.Layouts 1.15
 import itu.project.frontend 1.0
 import QtQml.Models 2.15
+import QtQuick.Controls 2.15
 
 Rectangle {
     id: mainRect
@@ -95,20 +96,31 @@ Rectangle {
             model: notesModel
 
             Rectangle {
+                id: notebox
                 x: notePos * scaleMs
                 y: (index+1) * (font.pixelSize + 15)
                 radius: textRectRadius
                 width: childrenRect.width + 10
                 height: childrenRect.height + 10
-                color: "#75e7e5ca"
+                color: notearea.containsMouse? "red" : "#75e7e5ca"
                 Text {
+                    id: notetextarea
                     x: 5
                     y: 5
                     text: noteText
                 }
+                MouseArea{
+                    id: notearea
+                    anchors.fill: notebox
+                    onClicked: {notebox.width = 0; notebox.height = 0; notetextarea.text = "";}
+                    hoverEnabled: true
+                    //onHoveredChanged:  hovered ? notebox.color = "red" : notebox.color = "#75e7e5ca";
+                }
+
             }
         }
     }
+
 
     Text {
         id: errorText
@@ -121,4 +133,6 @@ Rectangle {
         anchors.margins: 10
         visible: plot.audioFile.hasException
     }
+
+
 }
