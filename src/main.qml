@@ -13,7 +13,7 @@ ApplicationWindow
     width: 400
     height: 700
     visible: true
-    title: qsTr("Hello World")
+    title: qsTr("ITU Sound Sketch")
 
     property string copiedUrl: ""
     property bool isPlaying: false
@@ -29,27 +29,62 @@ ApplicationWindow
     }
 
     Dialog {
-        id: dialog
-        x: mainWindow.width / 2 - dialog.width/2
-        y: mainWindow.height / 2 - dialog.height/2
-        title: "Title"
-        standardButtons: Dialog.Ok
-        visible: false
-        Image {
-            id: name
-            y: 0
-            source: "images/newproject.png"
-            width: 200
-            height: 200
+            id: dialog
+            x: mainWindow.width / 2 - dialog.width/2
+            y: mainWindow.height / 2 - dialog.height/2
+            title: "Saved"
+            standardButtons: Dialog.Ok
+            visible: false
+            Image {
+                id: name
+                y: 0
+                source: "images/newproject.png"
+                width: 200
+                height: 200
+                Text {
+                    y: name.height - 25
+                    x: 10
+                    text: qsTr("Congratulations, you successfully \n       saved your project!")
+                }
+            }
+
+            onAccepted: console.log("Ok clicked")
+        }
+        Dialog {
+            id: dialog2
+            x: mainWindow.width / 2 - dialog.width/2
+            y: mainWindow.height / 2 - dialog.height/2
+            standardButtons: {
+                if(openedProjectModel.clips.count > 0)
+                {
+                    return Dialog.Yes | Dialog.No
+                }
+                return Dialog.Ok
+            }
+
+            visible: false
             Text {
-                y: name.height - 25
-                x: 25
-                text: qsTr("You successfully created \n       a new project!")
+                y: 5
+                text: {
+                    if(openedProjectModel.clips.count>0)
+                    {
+                        return qsTr("Do you really want to discard your current project?")
+                    }
+                    else return qsTr("Successfully created new project")
+                }
+            }
+            background: Rectangle {
+                        implicitWidth: 100
+                        implicitHeight: 40
+                        color: "#BFE5D9"
+                        border.color: "gainsboro"
+                        border.width: 1
+                        radius: 5
+                    }
+            onAccepted: {
+                    player.deleteAllClips()
             }
         }
-
-        onAccepted: console.log("Ok clicked")
-    }
 
     Drawer{
         id: menu
@@ -161,7 +196,7 @@ ApplicationWindow
                     radius: 7
                 }
                 onClicked: {
-                    player.deleteAllClips();
+                    dialog2.visible = true
                 }
             }
             Button{
@@ -192,7 +227,7 @@ ApplicationWindow
                 font.family: "Tahoma"
                 font.pointSize: 10
                 onClicked: {
-                    dialog.visible = true;
+                    dialog.visible = true
                 }
                 background: Rectangle {
                     id: savestyle
@@ -419,7 +454,7 @@ ApplicationWindow
         {
             id: formatDialog
             visible: false
-            title: qsTr("Unsupported file foramt.")
+            title: qsTr("Unsupported file format")
             text:
             {
                 var mess = qsTr("Supported formats are: ")

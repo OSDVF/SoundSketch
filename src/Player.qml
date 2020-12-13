@@ -155,7 +155,7 @@ Rectangle
             y: (parent.height - dropbox.height) / 2
             source: "images/dropbox.png"
             height: parent.height/1.3
-            width: dropbox.height
+            width: 0.8587 * dropbox.height
             opacity: 0.2
             visible: true
         }
