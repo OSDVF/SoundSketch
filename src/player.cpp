@@ -45,7 +45,7 @@ void player::play(AudioFile* audio, unsigned offset_ms)
     buffer->open(QIODevice::ReadOnly);
     buffer->seek((offset_ms/audio->durationMs())*buffer->size());
 
-    audio_len_ms = audio->durationMs();
+    audio_file = audio;
 
     audio_out->start(buffer);
     playing = true;
@@ -69,6 +69,12 @@ void player::state_changed(QAudio::State state)
 
 void player::notify_slot()
 {
-    if(playing)
-        emit set_pos_ms((buffer->pos()/qreal(buffer->size()))*audio_len_ms);
+    qreal current_pos = (buffer->pos()/qreal(buffer->size()))*audio_file->durationMs();
+    if(playing && current_pos > audio_file->startMs() && current_pos < audio_file->endMs())
+        emit set_pos_ms(current_pos);
+    else
+    {
+        this->stop();
+        emit done();
+    }
 }

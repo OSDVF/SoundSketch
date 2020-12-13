@@ -10,6 +10,7 @@ Rectangle{
     signal stop()
     signal jumpend()
     signal jumpbeg()
+    signal cut()
     signal del()
     signal addNote(var noteText)
     property int num: 0
@@ -155,6 +156,7 @@ Rectangle{
                       radius: 10
                   }
           onHoveredChanged:  hovered ? cut.opacity = 0.7 : cut.opacity = 1;
+          onClicked: control.cut()
     }
 
     Button

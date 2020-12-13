@@ -80,12 +80,31 @@ Rectangle
         return "";
     }
 
+    function cut_into_2_pieces()
+    {
+        var index = CList.getIndexOfItemAtPos(pos_ms);
+        if(index === -1)
+        {
+            return;
+        }
+        var cut_offset = pos_ms - clipList.get(index).posMs;
+
+        clipList.get(index).audioFile.endMs = cut_offset - 1;
+        addClipAtPos(clipList.get(index).audioFile.fileUrl, pos_ms + cut_offset);
+        var index_new = CList.getIndexOfItemAtPos(cut_offset);
+
+        console.log(index);
+        console.log(index_new);
+
+        //clipList.get(index_new).audioFile.startMs = cut_offset;todo
+    }
+
     function play()
     {
         var index = CList.getIndexOfItemAtPos(pos_ms);
         if(index === -1)
         {
-            time_offset_slider.value += 100;// * timeline.unit_scale;
+            time_offset_slider.value += 100;
             timeline.redraw();
             delay(100, function()
             {
@@ -93,7 +112,6 @@ Rectangle
             });
             return;
         }
-        console.log(index);
         player_backend.audio_pos_from_start = clipList.get(index).posMs;
         player_backend.play(clipList.get(index).audioFile, pos_ms - player_backend.audio_pos_from_start);
     }
@@ -333,7 +351,7 @@ Rectangle
         {
             var value = player_backend.audio_pos_from_start + pos_ms;
             value -= timeline.width_ms * timeline.value;
-            time_offset_slider.value = value;// / timeline.unit_scale;
+            time_offset_slider.value = value;
         }
         onDone:
         {
@@ -362,7 +380,7 @@ Rectangle
         value: from
         onValueChanged:
         {
-            timeline.offset_ms = parseInt(value, 10);// * timeline.unit_scale;
+            timeline.offset_ms = parseInt(value, 10);
             timeline.redraw();
         }
     }

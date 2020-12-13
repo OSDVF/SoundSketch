@@ -30,8 +30,8 @@ private slots:
 private:
     QAudioOutput* audio_out;
     QBuffer* buffer;
-    quint64 audio_len_ms;
     bool playing;
+    AudioFile* audio_file;
     int audio_pos_from_start;
 };
 

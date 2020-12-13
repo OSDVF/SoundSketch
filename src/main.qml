@@ -319,6 +319,7 @@ You can also open an existing project, in Project->Open."
         buttonline.stop.connect(player.stop);
         buttonline.jumpend.connect(player.jumpend);
         buttonline.jumpbeg.connect(player.jumpbeg);
+        buttonline.cut.connect(player.cut_into_2_pieces);
     }
 
 
