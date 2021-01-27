@@ -1,7 +1,9 @@
 # SoundSketch
 Projekt do předmětu [Tvorba uživatelských rozhraní (ITU)](https://www.fit.vut.cz/study/course/ITU/)
 
-[Technická zpráva](Zprava.pdf)
+- [Uričtě si to nestahuje](SoundSketch.zip)
+- [Technická zpráva](Zprava.pdf)
+- [Android verze](https://github.com/OSDVF/SoundSketch/tree/Android)
 
 ## Cíl
 Měli jsme vytvořit program ve stylu "cokoliv", u čeho budeme schopní obhájit, že jsme byli zajímaví a profesionální a prestižní, když jsme programovali jeho uživatelské rozhraní.
